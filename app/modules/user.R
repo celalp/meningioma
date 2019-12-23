@@ -1,0 +1,191 @@
+# this module will handle the bulk of the work where users see their samples and download reports. 
+# users will only see the samples that they have uploaded. 
+# account settings and sample submission code is under upload_sample.R and account_settings.R
+
+user_ui<-function(id){
+  ns<-NS(id)
+  uiOutput(ns("user_page"))
+}
+
+
+
+user_server<-function(input, output, session, parameters, user){
+  
+  samples<-reactiveValues(samples=NULL)
+  
+  output$user_page<-renderUI({
+    if (!user$login | user$admin) {
+      NULL
+    } else {
+      samp_query<-"select * from samples_users.samples where sampleid in 
+                (select sampleid from samples_users.samples_users_linked where userid=?id)"
+      samp_query<-sqlInterpolate(conn, samp_query, id=isolate(user$userid))
+      samp<-dbGetQuery(conn, samp_query)
+      samples$samples<-samp
+      tagList(
+        br(), 
+        column(width =1, offset = 11,
+               actionLink(inputId = session$ns("account_settings"), label = "Account Settings", icon = icon("gears")),
+               br()
+        ),
+        br(),
+        fluidRow(
+          ######## Samples Box ###########
+          boxPlus(title = "Samples", status = "primary", collapsible = T, closable = F, width = 4, 
+                  output$samples_table<-renderUI({
+                    if(length(samples$samples)==0){
+                      infoBox(title = "No Samples Found",value = 0, 
+                              subtitle="To add samples use the Upload Sample button below", 
+                              icon = icon("flask"), color = "teal", width = 12, fill = F)
+                    } else {
+                      output$samples_dt<-renderDT({
+                        datatable(samples$samples[, c("samplename", "added", "status")],
+                                  style = "bootstrap", class="compact", rownames = F,
+                                  options = list(
+                                    deferRender = TRUE,  scrollY = 450, scroller = TRUE, 
+                                    lengthChange = F, extensions = c('Responsive'), dom=c("ft")), 
+                                  selection="single")})
+                      DTOutput(session$ns("samples_dt"))
+                    }  
+                  }),
+                  actionGroupButtons(inputIds = c(session$ns("upload_sample_button"), session$ns("refresh_table")), 
+                                     labels = list(tags$span(icon("upload"), "Upload Sample"), 
+                                                   tags$span(icon("refresh"), "Refresh Table")), 
+                                     status = "primary")
+          ),
+          
+          ######### Reports Box ###########
+          boxPlus(title = "Results", status = "info", collapsible = T, closable = F, width = 8,
+                  output$reports<-renderUI({
+                    if(is.null(samples$samples)){
+                      NULL
+                    } else if (length(samples$samples) > 0  & is.null(input$samples_dt_rows_selected)){
+                      infoBox(title = "Select sample to view report", value = "", 
+                              subtitle="Click on one of the samples witih status 'Done' to view report", 
+                              icon = icon("search"), color = "navy", width = 12, fill = F)
+                    } else if (!is.null(input$samples_dt_rows_selected)){
+                      report_path<-paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
+                                          samples$samples[input$samples_dt_rows_selected, "samplename"], 
+                                          "/results/")
+                      if(samples$samples[input$samples_dt_rows_selected, "status"]=="Done"){
+                        selected_sample<-samples$samples[input$samples_dt_rows_selected,]
+                        for_dt<-selected_sample[, c("sampleid", "samplename", "added", "who_grade", "simpson_score", "description")]
+                        colnames(for_dt)<-c("Sample id", "Sample Name", "Date added", "Who grade", "Simpson grade", 
+                                            "Sample description")
+                        output$selected_sample<-renderDT({
+                          datatable(for_dt, style = "bootstrap", class="compact", 
+                                    rownames = F, options = list( deferRender = TRUE, extensions = c('Responsive'), 
+                                                                  dom=c("t"), ordering=F), selection="none")
+                        })
+                        
+                        tagList(
+                          tags$h3("Sample info"),
+                          DTOutput(session$ns("selected_sample")),
+                          br(),
+                          tags$h4("Detection p value:"),
+                          tags$p(renderText(selected_sample$detection_p)),
+                          tags$p(renderText("This is the average probability of proper signature detection. 
+                                          A value > 0.05 indicates poor sample quality")),
+                          tags$h4("5-year methylome probability:"),
+                          tags$p(renderText(selected_sample$methylome_prob)),
+                          tags$p(renderText("This is the probability of 5-year recurrence using a methylome signature derived from the tumour")),
+                          tags$h4("5-year Meningioma Recurrence Score:"),
+                          tags$p(renderText(selected_sample$recurrence_prob)),
+                          tags$p(renderText("This is the probability of 5-year recurrence-free survival calculated using a nomogram that 
+                                          incorporated the 5-year methylome probability with established clinical prognostic factors 
+                                          (WHO grade and Simpson grade) if provided by the user")),
+                          fluidRow(
+                            column(width = 8,
+                                   renderImage({list(src=paste0(report_path, "CNV.png"))}, deleteFile = F)
+                            ),
+                            column(width=4, 
+                                   renderImage({list(src=paste0(report_path, "density_plot.png"), width = "100%")}, deleteFile = F)
+                            )),
+                          tags$p("Copy number variation plot generated by methylation raw data. 
+                                 Gains/amplifications represent positive, losses negative deviations from the baseline. 
+                                 Meningioma relevant gene regions are highlighted for easier assessment. 
+                                 (see Hovestadt & Zapatka, http://www.bioconductor.org/packages/devel/bioc/html/conumee.html)"),
+                          #TODO downloads go here
+                          tags$h3("Downloads:"),
+                          br(), 
+                          downloadLink(session$ns("report_down"), "Download pdf report"),
+                          hr(),
+                          downloadLink(session$ns("bins_down"), "Download CNV bins"),
+                          br(),
+                          downloadLink(session$ns("details_down"), "Download CNV details"),
+                          br(),
+                          downloadLink(session$ns("segments_down"), "Download CNV segments")
+                        )
+                      } else {
+                        infoBox(title = "Report not yet available", value = "", 
+                                subtitle="Click on one of the samples witih status 'Done' to view report", 
+                                icon = icon("bug"), color = "olive", width = 12, fill = F)
+                      }
+                    }
+                  })
+          )
+        ),
+        
+        
+        ########## Modals ###############
+        bsModal("account_settings_modal", "Account Settings", session$ns("account_settings"), size="large", 
+                account_settings_ui(session$ns("account_settings_module"), user = user, samples = samples)
+        ),
+        bsModal("upload_sample_modal", "Upload New Sample", session$ns("upload_sample_button"), size="large", 
+                upload_sample_ui(session$ns("upload_sample_module"))  
+        )
+      )
+    }
+  })
+  
+  observeEvent(input$refresh_table, {
+    samp_query<-"select * from samples_users.samples where sampleid in 
+                (select sampleid from samples_users.samples_users_linked where userid=?id)"
+    samp_query<-sqlInterpolate(conn, samp_query, id=user$userid)
+    samp<-dbGetQuery(conn, samp_query)
+    samples$samples<-samp
+  })
+  
+  #TODO fix this for the sample at hand and apply for other files
+  output$report_down<-downloadHandler(
+    filename <- function() {"report.pdf"},
+    content <- function(file){
+      file.copy(
+        paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
+                       samples$samples[input$samples_dt_rows_selected, "samplename"], 
+                       "/results/report.pdf"), file)
+    }
+  )
+  
+  output$bins_down<-downloadHandler(
+    filename <- function() {"CNVbins.igv"},
+    content <- function(file) {
+      file.copy(paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
+                       samples$samples[input$samples_dt_rows_selected, "samplename"], 
+                       "/results/CNVbins.igv"), file)
+    }
+  )
+  
+  output$details_down<-downloadHandler(
+    filename <- function() {"CNVdetail.txt"},
+    content <- function(file) {
+      file.copy(paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
+                       samples$samples[input$samples_dt_rows_selected, "samplename"], 
+                       "/results/CNVdetail.txt"), file)
+    }
+  )
+  
+  output$segments_down<-downloadHandler(
+    filename <- function() {"CNVsegments.seg"},
+    content <- function(file) {
+      file.copy(paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
+                       samples$samples[input$samples_dt_rows_selected, "samplename"], 
+                       "/results/CNVsegments.seg"), file)
+    }
+  )
+  
+  callModule(account_settings_server, id = "account_settings_module", user=user, parameters=parameters, samples=samples)
+  callModule(upload_sample_server, "upload_sample_module",  user=user, parameters=parameters)
+  
+  
+}
