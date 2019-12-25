@@ -1,5 +1,7 @@
 FROM ubuntu:bionic
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update --yes && \
     apt-get upgrade --yes && \
     apt-get install curl --yes && \
@@ -11,8 +13,6 @@ RUN apt-get update --yes && \
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 
-ENV DEBIAN_FRONTEND=noninteractive 
-
 RUN apt-get install software-properties-common --yes
 
 RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
@@ -21,6 +21,17 @@ RUN apt-get update --yes
 
 RUN apt install r-base --yes
 
-COPY ./install_pipepacks.R ./install_pipepacks.R
+RUN apt-get install libpq-dev --yes
 
-RUN Rscript install_pipepacks.R
+COPY ./install_pipepacks.R app/install_pipepacks.R
+
+RUN Rscript app/install_pipepacks.R
+
+RUN useradd -ms /bin/bash pipeline
+
+USER pipeline
+
+RUN mkdir /home/application/app
+
+WORKDIR /home/application/app
+

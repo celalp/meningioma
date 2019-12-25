@@ -21,13 +21,19 @@ RUN apt-get update --yes
 
 RUN apt install r-base --yes
 
-RUN mkdir app
+RUN apt-get install libpq-dev --yes
 
-COPY install_apppacks.R /root/app
+COPY ./install_apppacks.R app/install_apppacks.R
 
 RUN Rscript app/install_apppacks.R
 
-WORKDIR #this the main application directory
+RUN useradd -ms /bin/bash application
+
+USER application
+
+RUN mkdir /home/application/app
+
+WORKDIR /home/application/app
 
 
 
