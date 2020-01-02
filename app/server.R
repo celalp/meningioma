@@ -70,8 +70,11 @@ server<-function(input, output, session){
   #if user_status()$login is true and the user is admin below will display otherwise will be null  
   #callModule(module = admin_server, id="admin_screen", conn=conn, status=user_status)
   
+  #TODO errorcheck
   session$onSessionEnded(
     function(){
+      access<-data.frame(time=Sys.time(), username=user$username, action="logout", status="success")
+      dbWriteTable(conn, "access", access, append=T, row.names=F)
       dbDisconnect(conn = conn)
     }
   )  

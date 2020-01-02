@@ -27,11 +27,8 @@ COPY ./install_pipepacks.R app/install_pipepacks.R
 
 RUN Rscript app/install_pipepacks.R
 
-RUN useradd -ms /bin/bash pipeline
+RUN useradd pipeline
 
 USER pipeline
 
-RUN mkdir /home/application/app
-
-WORKDIR /home/application/app
 

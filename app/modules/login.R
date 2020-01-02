@@ -35,7 +35,7 @@ login_server<-function(input, output, session, parameters, user){
                                             textInput(inputId = session$ns("forgot_username"), "Username  (required)", value=""),
                                             textInput(inputId = session$ns("forgot_email"), "Email  (required)", value=""),
                                             textInput(inputId = session$ns("forgot_secret"), "Secret  (required)", value=""),
-                                            passwordInput(inputId = session$ns("forgot_password1"), "New Password  (required)", value = ""), 
+                                            passwordInput(inputId = session$ns("forgot_password1"), "New Password  (required min 12 characters)", value = ""), 
                                             passwordInput(inputId = session$ns("forgot_password2"), "Verify Password  (required)", value=""),
                                             bsAlert("forgot_password_alert"),
                                             actionButton(inputId = session$ns("reset_password_button"), label = "Reset Password", 
@@ -54,9 +54,9 @@ login_server<-function(input, output, session, parameters, user){
                                     textInput(inputId = session$ns("middlename"), "Middle Name", value = ""),
                                     textInput(inputId = session$ns("lastname"), "Last Name (required)", value = ""),
                                     textInput(inputId = session$ns("signup_email"), "Email (required)", value = ""),
-                                    passwordInput(inputId = session$ns("signup_password1"), "Password (required)", value = ""), 
+                                    passwordInput(inputId = session$ns("signup_password1"), "Password (required min 12 characters)", value = ""), 
                                     passwordInput(inputId = session$ns("signup_password2"), "Verify Password (required)", value = ""),
-                                    textInput(inputId = session$ns("signup_secret"), "Secret (required)", 
+                                    textInput(inputId = session$ns("signup_secret"), "Secret (required min 10 characters)", 
                                               value="") %>%
                                       shinyInput_label_embed(
                                         shiny_iconlink() %>%
@@ -101,6 +101,8 @@ login_server<-function(input, output, session, parameters, user){
       user_query<-sqlInterpolate(conn, user_sql, username=input$login_username, password=passwd)
       user_info<-dbGetQuery(conn, user_query)
       if(nrow(user_info)==0){
+        access<-data.frame(time=Sys.time(), username=input$login_username, action="login", status="fail/wrong info")
+        dbWriteTable(conn, "access", access, append=T, row.names=F)
         closeAlert(session, "login_alert_control")
         createAlert(session, "login_alert", "login_alert_control", title = "", 
                     content = "Incorrect username and/or password", style = "danger")
@@ -109,7 +111,7 @@ login_server<-function(input, output, session, parameters, user){
         if(!user_info$active & !dir.exists(paste0(parameters$basepath, parameters$sample_files, user_info$username))){ 
           #first time log in so need to creat a home directory
           tryCatch({
-            dir.create(paste0(parameters$basepath, parameters$sample_files, user_info$username, mode=0600))
+            dir.create(paste0(parameters$basepath, parameters$sample_files, user_info$username), mode=0600)
             activate<-"update samples_users.users set active='t' where username=?username"
             activate<-sqlInterpolate(conn, activate, username=user_info$username)
             dbSendStatement(conn, activate)
@@ -137,7 +139,7 @@ login_server<-function(input, output, session, parameters, user){
         closeAlert(session, "login_alert_control")
         createAlert(session, "login_alert", "login_alert_control", title = "", 
                     content = "There is an error with your account please contact admin", style = "danger")
-        access<-data.frame(time=Sys.time(), username=input$login_username, action="login", status="fail")
+        access<-data.frame(time=Sys.time(), username=input$login_username, action="login", status="fail/system")
         dbWriteTable(conn, "access", access, append=T, row.names=F)
       }
     }
@@ -276,6 +278,7 @@ login_server<-function(input, output, session, parameters, user){
     }
   })
   
+  #TODO errorcheck
   observeEvent(input$logout_link, {
     access<-data.frame(time=Sys.time(), username=user$username, action="logout", status="success")
     dbWriteTable(conn, "access", access, append=T, row.names=F)

@@ -71,9 +71,11 @@ basepath<-paste0(parameters$basepath, parameters$sample_files, unlist(username),
 print(basepath)
 message("starting analysis")
 
-status<-"update samples_users.samples set status='running' where sampleid=?id"
+status<-"update samples_users.samples set status='Running' where sampleid=?id"
 status<-sqlInterpolate(conn, status, id=args$sampleid)
 dbSendStatement(conn, status)
+
+
 
 message("loading sample files")
 
@@ -90,7 +92,7 @@ if(class(RGset)!="try-error"){
   prog_df<-data.frame(time=Sys.time(), message="File read error", status="Fail", 
                       username=username, samplename=sample_info$samplename)
   dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)
-  status<-"update samples_users.samples set status='File Error, make sure you uploaded the correct files' where sampleid=?id"
+  status<-"update samples_users.samples set status='Error see analysis logs' where sampleid=?id"
   status<-sqlInterpolate(conn, status, id=args$sampleid)
   dbSendStatement(conn, status)
   stop("File read error")
@@ -213,18 +215,11 @@ if(sample_info$who_grade!="NA" & sample_info$simpson_score!="NA"){
   newx<-matrix(c(as.numeric(sample_info$who_grade), as.numeric(sample_info$simpson_score), metp), nrow=1)
   colnames(newx)<-hdnom.varinfo(hdnom_model, x)$name
   recurrence_p<-predict(hdnom_model, as.matrix(x), as.matrix(y), newx, 5)[1]
-  status<-"update samples_users.samples set recurrence_prob=?rec_p, status=?stat where sampleid=?id"
-  status<-sqlInterpolate(conn, status, id=args$sampleid, rec_p=recurrence_p, stat="Done")
-  dbSendStatement(conn, status)
   prog_df<-data.frame(time=Sys.time(), message="recurrence prediction complete", status="Done", 
                       username=username, samplename=sample_info$samplename)
   dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)
 } else {
   message("no simpson or who score stopping")
-  status<-"update samples_users.samples set status=?stat where sampleid=?id"
-  status<-sqlInterpolate(conn, status, id=args$sampleid, 
-                         stat="Need both WHO grade and Simpson score for recurrence calculation")
-  dbSendStatement(conn, status)
   prog_df<-data.frame(time=Sys.time(), message="No who or simpson score stopping!", status="Done", 
                       username=username, samplename=sample_info$samplename)
   dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)
@@ -233,5 +228,9 @@ if(sample_info$who_grade!="NA" & sample_info$simpson_score!="NA"){
 
 file.copy("sample_report.Rmd", paste0(results_path, "/sample_report.Rmd"), overwrite = T)
 render(input = paste0(results_path, "/sample_report.Rmd"), output_file = "report.pdf")
+
+status<-"update samples_users.samples set recurrence_prob=?rec_p, status=?stat where sampleid=?id"
+status<-sqlInterpolate(conn, status, id=args$sampleid, rec_p=recurrence_p, stat="Done")
+dbSendStatement(conn, status)
 
 message("Done")

@@ -29,6 +29,7 @@ for(module in modules){
 ui<-navbarPage("Methylation App", theme = shinytheme("lumen"), inverse = F, selected = "home", 
                id = "tabs", collapsible = T, position="fixed-top",
                useShinydashboardPlus(),
+               useShinyjs(),
                # home page is a static page, the entire UI will be rendered here
                tabPanel("Home", icon = icon("home"), value = "home", 
                         br(),

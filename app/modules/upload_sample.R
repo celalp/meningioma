@@ -42,6 +42,9 @@ upload_sample_server<-function(input, output, session, user, parameters){
   ready<-reactiveVal(F)
   sexists<-reactiveVal(F)
   
+  
+  ##################################
+  # This checks for a whole bunch of things before analysis submission to save computational burden
   observeEvent(input$sample_check, {
     
     samp_query<-"select * from samples_users.samples where sampleid in 
@@ -122,6 +125,7 @@ upload_sample_server<-function(input, output, session, user, parameters){
   
   ############ Start Analysis ###########
   observeEvent(input$process_sample, {
+    shinyjs::disable("process_sample")
     path<-paste0(parameters$basepath, parameters$sample_files, user$username, "/", input$upload_samplename)
     # create folder for the sample files
     # check if the folder alreay is there that means there is a database error major bug
@@ -155,7 +159,7 @@ upload_sample_server<-function(input, output, session, user, parameters){
           linker<-data.frame(userid=user$userid, sampleid=sampleid)
           dbWriteTable(conn, "samples_users_linked", linker, append=T, row.names=F)
           analysis<-data.frame(time=Sys.time(), message="sample uploaded", status="success", 
-                               username=user$username, samplename=input$upload_samplename)
+                               sampleid=sampleid)
           dbWriteTable(conn, "analysis", analysis, append=T, row.names=F)
           closeAlert(session, "sample_submission_alert_control")
           createAlert(session, "sample_submission_alert", "sample_submission_alert_control", title = "", 
@@ -163,12 +167,7 @@ upload_sample_server<-function(input, output, session, user, parameters){
                       please come back later for results", 
                       style = "success")
           
-          samp_query<-"select * from samples_users.samples where sampleid in 
-                (select sampleid from samples_users.samples_users_linked where userid=?id)"
-          samp_query<-sqlInterpolate(conn, samp_query, id=user$userid)
-          samp<-dbGetQuery(conn, samp_query)
-          samples$samples<-samp
-          ready(F)
+          ready(F) #turn off the process sample button so the user doesn't click a million times
           
         } else {
           closeAlert(session, "sample_submission_alert_control")

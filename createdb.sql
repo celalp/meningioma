@@ -17,7 +17,10 @@ CREATE TABLE IF NOT EXISTS samples_users.users
  "email"      varchar(150) NOT NULL
 );
 
-
+CREATE INDEX "user" ON samples_users.users
+(
+ "username,password"
+);
 
 CREATE TABLE IF NOT EXISTS samples_users.samples
 (
@@ -33,6 +36,10 @@ CREATE TABLE IF NOT EXISTS samples_users.samples
  "description"   varchar(500)
 );
 
+CREATE INDEX "sample" ON samples_users.samples
+(
+ "sampleid"
+);
 
 CREATE TABLE IF NOT EXISTS samples_users.access
 (
@@ -51,12 +58,21 @@ CREATE INDEX "user_access" ON samples_users.access
 
 CREATE TABLE IF NOT EXISTS samples_users.samples_users_linked
 (
-  "userid"   serial NOT NULL,
+ "userid"   serial NOT NULL,
  "sampleid" serial NOT NULL,
   PRIMARY KEY (userid, sampleid)
 );
 
+CREATE INDEX "link_sampleid" ON samples_users.samples_users_linked
+(
+ "sampleid"
+);
 
+
+CREATE INDEX "link_sampleid" ON samples_users.samples_users_linked
+(
+ "userid"
+);
 
 CREATE TABLE IF NOT EXISTS samples_users.analysis
 (
@@ -64,19 +80,13 @@ CREATE TABLE IF NOT EXISTS samples_users.analysis
  "time"     timestamp NOT NULL,
  "message"  varchar(500) NOT NULL,
  "status"   varchar(50) NOT NULL,
- "username"   varchar(75) NOT NULL,
- "samplename" varchar(75) NOT NULL
+ "sampleid" integer NOT NULL
 );
 
 
 CREATE INDEX "analysis_sampleid" ON samples_users.analysis
 (
- "samplename"
-);
-
-CREATE INDEX "analysis_userid" ON samples_users.analysis
-(
- "username"
+ "sampleid"
 );
 
 

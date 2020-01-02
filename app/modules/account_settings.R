@@ -1,11 +1,14 @@
 # this is the code that renders what's inside the modal when user clicks account settings
 
 
-account_settings_ui<-function(id, user, samples){
+account_settings_ui<-function(id, user){
   ns<-NS(id)
   userinfo<-"select * from samples_users.users where userid=?id"
   userinfo<-sqlInterpolate(conn, userinfo, id=isolate(user$userid))
   userinfo<-dbGetQuery(conn, userinfo)
+  samples<-"select count(*) from samples_users.samples where sampleid in (select userid from samples_users.users where userid=?id)"
+  samples<-sqlInterpolate(conn, samples, id=user$userid)
+  samples<-dbGetQuery(conn, samples)$count
   fluidRow(
     #uiOutput(ns("sample_card")),
     tagList(
@@ -15,7 +18,7 @@ account_settings_ui<-function(id, user, samples){
         subtitle = paste("Account Created on", userinfo$created),
         color = "aqua", icon = icon("user"), width = 12, fill = F),
       column(width = 4, offset = 1,
-             renderText(paste(nrow(isolate(samples$samples)), "samples uploaded so far")),
+             paste(renderText(samples), "samples uploaded so far"),
              renderText(paste("Email:", userinfo$email)),
              br(), 
              pickerInput(
@@ -34,7 +37,7 @@ account_settings_ui<-function(id, user, samples){
   )
 }
 
-account_settings_server<-function(input, output, session, user, parameters, samples){
+account_settings_server<-function(input, output, session, user, parameters){
   
   enc<-get(parameters$encryption$algorithm)
   
@@ -64,7 +67,7 @@ account_settings_server<-function(input, output, session, user, parameters, samp
       fluidRow(
         wellPanel(
           h4("Update Password"),
-          passwordInput(inputId=session$ns("new_password"), label="New Password", value = ""),
+          passwordInput(inputId=session$ns("new_password"), label="New Password (min 12 characters)", value = ""),
           passwordInput(inputId=session$ns("confirm_new_password"), label="Confirm New Password", value = ""),
           actionButton(inputId=session$ns("update_pw"), label="Update Password", icon=icon("user-edit")),
           br()
@@ -81,7 +84,7 @@ account_settings_server<-function(input, output, session, user, parameters, samp
       fluidRow(
         wellPanel(
           h4("Update Secret"),
-          textInput(inputId=session$ns("new_secret"), label="New Secret", value = ""),
+          textInput(inputId=session$ns("new_secret"), label="New Secret (min 10 characters)", value = ""),
           actionButton(inputId=session$ns("update_secret"), label="Update Secret", icon=icon("user-edit")),
           br()
         ),

@@ -116,10 +116,15 @@ user_server<-function(input, output, session, parameters, user){
                           br(),
                           downloadLink(session$ns("segments_down"), "Download CNV segments")
                         )
+                      } else if (samples$samples[input$samples_dt_rows_selected, "status"]=="Fail") {
+                        infoBox(title = "Report could not be generated" , value = "", 
+                                subtitle="See analysis logs tab to see the potential cause for error", 
+                                icon = icon("bug"), color = "maroon", width = 12, fill = F)
+                        
                       } else {
                         infoBox(title = "Report not yet available", value = "", 
                                 subtitle="Click on one of the samples witih status 'Done' to view report", 
-                                icon = icon("bug"), color = "olive", width = 12, fill = F)
+                                icon = icon("hourglass-half"), color = "olive", width = 12, fill = F)
                       }
                     }
                   })
@@ -152,8 +157,8 @@ user_server<-function(input, output, session, parameters, user){
     content <- function(file){
       file.copy(
         paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
-                       samples$samples[input$samples_dt_rows_selected, "samplename"], 
-                       "/results/report.pdf"), file)
+               samples$samples[input$samples_dt_rows_selected, "samplename"], 
+               "/results/report.pdf"), file)
     }
   )
   
@@ -184,7 +189,7 @@ user_server<-function(input, output, session, parameters, user){
     }
   )
   
-  callModule(account_settings_server, id = "account_settings_module", user=user, parameters=parameters, samples=samples)
+  callModule(account_settings_server, id = "account_settings_module", user=user, parameters=parameters)
   callModule(upload_sample_server, "upload_sample_module",  user=user, parameters=parameters)
   
   

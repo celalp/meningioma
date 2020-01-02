@@ -20,10 +20,9 @@ app_files:
   appdir: app/
   images: app/www/img
   static: app/www/static
-  pipeline: analysis_pipeline.R
   utils: 
-    extrasample: utils/extrasample
-    extrenaldata: utils/extrenaldata
+    extrasample: data/extrasample
+    extrenaldata: data/extrenaldata
     functions: functions.R
     modules:
       login: modules/login.R
@@ -33,6 +32,5 @@ app_files:
       upload_sample: modules/upload_sample.R
     analysis: # TODO add as needed
       pipeline: analysis_pipeline.R
-      html: sample_report_html.Rmd
-      pdf: sample_report_pdf.Rmd
+      pdf: sample_report.Rmd
     backup: backup.sh
