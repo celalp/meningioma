@@ -73,8 +73,6 @@ server<-function(input, output, session){
   #TODO errorcheck
   session$onSessionEnded(
     function(){
-      access<-data.frame(time=Sys.time(), username=user$username, action="logout", status="success")
-      dbWriteTable(conn, "access", access, append=T, row.names=F)
       dbDisconnect(conn = conn)
     }
   )  

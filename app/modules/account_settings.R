@@ -7,7 +7,7 @@ account_settings_ui<-function(id, user){
   userinfo<-sqlInterpolate(conn, userinfo, id=isolate(user$userid))
   userinfo<-dbGetQuery(conn, userinfo)
   samples<-"select count(*) from samples_users.samples where sampleid in (select userid from samples_users.users where userid=?id)"
-  samples<-sqlInterpolate(conn, samples, id=user$userid)
+  samples<-sqlInterpolate(conn, samples, id=isolate(user$userid))
   samples<-dbGetQuery(conn, samples)$count
   fluidRow(
     #uiOutput(ns("sample_card")),
@@ -18,7 +18,7 @@ account_settings_ui<-function(id, user){
         subtitle = paste("Account Created on", userinfo$created),
         color = "aqua", icon = icon("user"), width = 12, fill = F),
       column(width = 4, offset = 1,
-             paste(renderText(samples), "samples uploaded so far"),
+             renderText(paste(samples, "samples uploaded so far")),
              renderText(paste("Email:", userinfo$email)),
              br(), 
              pickerInput(

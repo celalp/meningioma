@@ -1,0 +1,38 @@
+# this is the config file for the app
+# if you are adding this to your git repo 
+# DO NOT fill in the username and password 
+# instead create a backup and add that to your git 
+# and the filled file to your .gitignore
+# use abosolute paths for locations
+basepath: "/mnt/c/Users/Alper Celik/OneDrive - SickKids/methylaytion/"
+database:
+  name: webapp
+  username: alper
+  password: password
+  host: localhost
+  port: 5432
+sample_files: files/
+encryption:
+  algorithm: sha512 #lowercase these are function names in R
+email:
+  address: admin@email.com  #these are just for notifications I will not send emails
+app_files:
+  appdir: app/
+  images: app/www/img
+  static: app/www/static
+  pipeline: analysis_pipeline.R
+  utils: 
+    extrasample: data/extrasample
+    extrenaldata: data/extrenaldata
+    functions: functions.R
+    modules:
+      login: modules/login.R
+      admin: modules/admin.R
+      user: modules/user.R
+      account_settings: modules/account_settings.R
+      upload_sample: modules/upload_sample.R
+    analysis: # TODO add as needed
+      pipeline: analysis_pipeline.R
+      html: sample_report_html.Rmd
+      pdf: sample_report_wsl.Rmd
+    backup: backup.sh
