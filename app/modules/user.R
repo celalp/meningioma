@@ -31,7 +31,7 @@ user_server<-function(input, output, session, parameters, user){
         br(),
         fluidRow(
           ######## Samples Box ###########
-          boxPlus(title = "Samples", status = "primary", collapsible = T, closable = F, width = 4, 
+          boxPlus(title = "Samples", status = "primary", collapsible = F, closable = F, width = 4, 
                   output$samples_table<-renderUI({
                     if(length(samples$samples)==0){
                       infoBox(title = "No Samples Found",value = 0, 
@@ -57,11 +57,11 @@ user_server<-function(input, output, session, parameters, user){
           ),
           
           ######### Reports Box ###########
-          boxPlus(title = "Results", status = "info", collapsible = T, closable = F, width = 8,
+          boxPlus(title = "Results", status = "info", collapsible = F, closable = F, width = 8,
                   output$reports<-renderUI({
                     tabsetPanel(
                       tabPanel(title = "Analysis", icon = icon("file"), 
-                               if(is.null(samples$samples)){
+                               if(length(samples$samples)==0){
                                  NULL
                                } else if (length(samples$samples) > 0  & is.null(input$samples_dt_rows_selected)){
                                  tagList(
@@ -124,19 +124,17 @@ user_server<-function(input, output, session, parameters, user){
                                      br(),
                                      downloadLink(session$ns("segments_down"), "Download CNV segments"),
                                      hr(), 
-                                     br(), 
-                                     #this will have an observer to launch a sweetalert the alert then will delete the sample
-                                     actionGroupButtons(inputIds = c(session$ns("delete")), 
-                                                        labels = list(tags$span(icon("trash"), "Delete Sample")), 
-                                                        status = "danger")
+                                     br() 
                                    )
                                    
-                                 } else if (samples$samples[input$samples_dt_rows_selected, "status"]=="Fail") {
+                                 } else if (samples$samples[input$samples_dt_rows_selected, "status"]=="Error! see analysis logs") {
+                                   br()
                                    infoBox(title = "Report could not be generated" , value = "", 
                                            subtitle="See analysis logs tab to see the potential cause for error", 
                                            icon = icon("bug"), color = "maroon", width = 12, fill = F)
                                    
                                  } else {
+                                   br()
                                    infoBox(title = "Report not yet available", value = "", 
                                            subtitle="Click on one of the samples witih status 'Done' to view report", 
                                            icon = icon("hourglass-half"), color = "olive", width = 12, fill = F)
@@ -167,14 +165,28 @@ user_server<-function(input, output, session, parameters, user){
                                                              scrollY = 450, scroller = TRUE,
                                                              dom=c("t"), ordering=F), selection="none")
                                  })
-                                   tagList(
-                                     tags$h3("Analysis Logs"),
-                                     br(),
-                                     DTOutput(session$ns("log_table"))
-                                   )
+                                 tagList(
+                                   tags$h3("Analysis Logs"),
+                                   br(),
+                                   DTOutput(session$ns("log_table")),
+                                   br(),
+                                   br()
+                                 )
                                }
                       )
                     )
+                  }),
+                  
+                  output$delete_ui<-renderUI({
+                    if(nrow(samples$samples)==0){
+                      NULL
+                    } else if (nrow(samples$samples) > 0  & is.null(input$samples_dt_rows_selected)) {
+                      NULL
+                    } else {
+                      actionGroupButtons(inputIds = c(session$ns("delete")), 
+                                         labels = list(tags$span(icon("trash"), "Delete Sample")), 
+                                         status = "danger")
+                    }
                   })
           )
         ),
@@ -191,7 +203,7 @@ user_server<-function(input, output, session, parameters, user){
     }
   })
   
-  observeEvent(input$refresh_table, {
+  observeEvent(c(input$refresh_table,input$delete_confirm), {
     samp_query<-"select * from samples_users.samples where sampleid in 
                 (select sampleid from samples_users.samples_users_linked where userid=?id)"
     samp_query<-sqlInterpolate(conn, samp_query, id=user$userid)
@@ -248,17 +260,47 @@ user_server<-function(input, output, session, parameters, user){
   
   observeEvent(input$delete_confirm, {
     if(input$delete_confirm){
-      NULL
-      #  tryCatch({
-      #    id<-samples$samples[input$samples_dt_rows_selected, "sampleid"]
-      #    del_query_samp<-"delete from samples_users.samples where sampleid=?id"
-      #    del_query_samp<-sqlInterpolate(conn, del_query_samp, id=id)
+      id<-samples$samples[input$samples_dt_rows_selected, "sampleid"]
+      name<-samples$samples[input$samples_dt_rows_selected, "samplename"]
+      print(name)
+      tryCatch({
+        withProgress(message = paste("Removing sample", name), {
+          incProgress(amount = 1/7, detail = "gathering information")
+          
+          del_query_samp<-"delete from samples_users.samples where sampleid=?id"
+          del_query_samp<-sqlInterpolate(conn, del_query_samp, id=id)
+          dbSendStatement(conn, del_query_samp)
+          incProgress(amount = 1/7, detail = "deleted from database 1/3")
+          
+          del_query_link<-"delete from samples_users.samples_users_linked where sampleid=?id"
+          del_query_link<-sqlInterpolate(conn, del_query_link, id=id)
+          dbSendStatement(conn, del_query_link)
+          incProgress(amount = 1/7, detail = "deteled from database 2/3")
+          
+          del_query_analysis<-"delete from samples_users.analysis where sampleid=?id"
+          del_query_analysis<-sqlInterpolate(conn, del_query_analysis, id=id)
+          dbSendStatement(conn, del_query_analysis)
+          incProgress(amount = 1/7, detail = "deteled from database 3/3")
+          
+          unlink(paste0(parameters$basepath, parameters$sample_files, user$username,"/", name), recursive = T)
+          incProgress(amount = 1/7, detail = "deleted sample files and results")
+          
+          unlink(paste0(parameters$basepath, parameters$analysis$logs, id, ".log"))
+          incProgress(amount = 1/7, detail = "deleted log files")
+          
+          incProgress(amount = 1/7, detail = "Done")
+          showNotification(ui = paste(name, "remmoved from the system it may take up to", 
+                                      parameters$backup$frequency, "days for the data to be completeley removed from 
+                                 all backups"), type="default", session=session)
+        })
+      }, error=function(e){
+        showNotification(ui = "There was an error removing the sample from our system. Please contact admin to remove the sample manually", 
+                         duration=NULL, type="error")
+        
+      })
       
-      #    del_query_link<-"delete from samples_users.samples_users_linked where sampleid=?id"
-      #    del_query_link<-sqlInterpolate(conn, del_query_link, id=id)
       
-      #    unlink(paste0(parameters$samples_files,user$username,"/", id))    
-      #  })
+      
       
     } else {
       NULL

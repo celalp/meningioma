@@ -156,7 +156,7 @@ upload_sample_server<-function(input, output, session, user, parameters){
           sampleid<-dbGetQuery(conn, newsample)$sampleid
           linker<-data.frame(userid=user$userid, sampleid=sampleid)
           dbWriteTable(conn, "samples_users_linked", linker, append=T, row.names=F)
-          analysis<-data.frame(time=Sys.time(), message="sample uploaded", status="success", 
+          analysis<-data.frame(time=Sys.time(), message="sample uploaded", status="Success", 
                                sampleid=sampleid)
           dbWriteTable(conn, "analysis", analysis, append=T, row.names=F)
           closeAlert(session, "sample_submission_alert_control")

@@ -20,7 +20,7 @@ suppressPackageStartupMessages(library(yaml))
 
 #parameteds is hardcoded do not move config.yaml file
 parameters<-yaml.load_file("../config.yaml")
-modules<-paste0(parameters$basepath, parameters$app_files$appdir, unlist(parameters$app_files$utils$modules))
+modules<-paste0(parameters$basepath, parameters$app_files$appdir, unlist(parameters$app_files$modules))
 
 for(module in modules){
   source(module)

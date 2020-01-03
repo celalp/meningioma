@@ -39,8 +39,8 @@ parameters<-yaml.load_file(args$yaml)
 
 message("loading external data")
 
-load(file = paste0(parameters$app_files$utils$extrenaldata,"/3objs_AUC88_MDA77_MRMRE9.5k_23K_Final.RData"))
-load(file = paste0(parameters$app_files$utils$extrenaldata, "/coxregression.Rdata"))
+load(file = paste0(parameters$analysis$externaldata,"/3objs_AUC88_MDA77_MRMRE9.5k_23K_Final.RData"))
+load(file = paste0(parameters$analysis$externaldata, "/coxregression.Rdata"))
 
 conn<-dbConnect(drv = PostgreSQL(), parameters$database$host, 
                 user=parameters$database$username, 
@@ -106,19 +106,18 @@ array_type <- ifelse(ima=="IlluminaHumanMethylationEPIC","EPIC","450k")
 message("loading annotations")
 
 if(array_type=="450k"){
-  MsetCtrl <- loadRDS(paste0(parameters$app_files$utils$extrenaldata,"/", "450K_control.Rds"))
+  MsetCtrl <- loadRDS(paste0(parameters$analysis$externaldata,"/", "450K_control.Rds"))
   library(IlluminaHumanMethylation450kmanifest)
   library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
-  load(file = paste0(parameters$app_files$utils$extrasample, "/", "450K_1ExtraSample_RGset.RData"))
+  load(file = paste0(parameters$analysis$extrasample, "/", "450K_1ExtraSample_RGset.RData"))
   prog_df<-data.frame(time=Sys.time(), message=paste("Array type", array_type), status="Proceed", 
                       sampleid=args$sampleid)
   dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)
 } else if (array_type=="EPIC"){
-  MsetCtrl <- loadRDS(paste0(parameters$app_files$utils$extrenaldata, "/", "EPIC_control.Rds"))
+  MsetCtrl <- loadRDS(paste0(parameters$analysis$externaldata, "/", "EPIC_control.Rds"))
   library(IlluminaHumanMethylationEPICmanifest)
   library("IlluminaHumanMethylationEPICanno.ilm10b4.hg19")
-  load(file = paste0(parameters$app_files$utils$extrasample, "/", "EPIC_1ExtraSample_RGset.RData"))
-  load(file = paste0(parameters$app_files$utils$extrasample, "/", "450K_1ExtraSample_RGset.RData"))
+  load(file = paste0(parameters$analysis$extrasample, "/", "EPIC_1ExtraSample_RGset.RData"))
   prog_df<-data.frame(time=Sys.time(), message=paste("Array type", array_type), status="Proceed", 
                       sampleid=args$sampleid)
   dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)
@@ -231,7 +230,8 @@ prog_df<-data.frame(time=Sys.time(), message="Generating pdf report", status="Pr
                     sampleid=args$sampleid)
 dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)
 
-file.copy("sample_report.Rmd", paste0(results_path, "/sample_report.Rmd"), overwrite = T)
+report_path<-paste0(parameters$basepath, parameters$analysis$rmd)
+file.copy(report_path, paste0(results_path, "/sample_report.Rmd"), overwrite = T)
 render(input = paste0(results_path, "/sample_report.Rmd"), output_file = "report.pdf")
 
 status<-"update samples_users.samples set status=?stat where sampleid=?id"

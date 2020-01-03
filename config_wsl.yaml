@@ -20,19 +20,19 @@ app_files:
   appdir: app/
   images: app/www/img
   static: app/www/static
-  pipeline: analysis_pipeline.R
-  utils: 
-    extrasample: data/extrasample
-    extrenaldata: data/extrenaldata
-    functions: functions.R
-    modules:
+  modules:
       login: modules/login.R
       admin: modules/admin.R
       user: modules/user.R
       account_settings: modules/account_settings.R
       upload_sample: modules/upload_sample.R
-    analysis: # TODO add as needed
-      pipeline: analysis_pipeline.R
-      html: sample_report_html.Rmd
-      pdf: sample_report_wsl.Rmd
-    backup: backup.sh
+analysis:
+  pipeline: analysis_pipeline.R
+  rmd: sample_report.Rmd
+  logs: analysis_logs/
+  extrasample: data/extrasample
+  externaldata: data/externaldata
+  functions: functions.R
+backup: 
+  script: backup.sh
+  frequency: 7
