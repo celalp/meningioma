@@ -1,5 +1,3 @@
-# this is the code that renders and checks sample info and files when the user click upload sample button
-
 upload_sample_ui<-function(id){
   ns<-NS(id)
   tagList(
@@ -152,7 +150,7 @@ upload_sample_server<-function(input, output, session, user, parameters){
         }
         if(rcopy & gcopy){
           info<-paste(paste0("'", c(input$upload_samplename, as.character(Sys.time()), input$upload_who, input$upload_simpson, "queued for analysis",
-          input$upload_sample_info),"'"), collapse=",")
+                                    input$upload_sample_info),"'"), collapse=",")
           newsample<-paste("insert into samples_users.samples (samplename, added, who_grade, simpson_score, status, description) values (",
                            info, ") returning sampleid")
           sampleid<-dbGetQuery(conn, newsample)$sampleid

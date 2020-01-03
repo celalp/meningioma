@@ -41,13 +41,15 @@ user_server<-function(input, output, session, parameters, user){
                       output$samples_dt<-renderDT({
                         datatable(samples$samples[, c("samplename", "added", "status")],
                                   style = "bootstrap", class="compact", rownames = F,
+                                  extensions = 'Scroller',
                                   options = list(
                                     deferRender = TRUE,  scrollY = 450, scroller = TRUE, 
-                                    lengthChange = F, extensions = c('Responsive'), dom=c("ft")), 
+                                    lengthChange = F,  dom=c("ft")), 
                                   selection="single")})
                       DTOutput(session$ns("samples_dt"))
                     }  
                   }),
+                  br(),
                   actionGroupButtons(inputIds = c(session$ns("upload_sample_button"), session$ns("refresh_table")), 
                                      labels = list(tags$span(icon("upload"), "Upload Sample"), 
                                                    tags$span(icon("refresh"), "Refresh Table")), 
@@ -124,9 +126,11 @@ user_server<-function(input, output, session, parameters, user){
                                      hr(), 
                                      br(), 
                                      #this will have an observer to launch a sweetalert the alert then will delete the sample
-                                     actionBttn(session$ns("delete"), label = "Delete Sample", icon = icon("trash-alt"), color = "danger", style = "fill")
+                                     actionGroupButtons(inputIds = c(session$ns("delete")), 
+                                                        labels = list(tags$span(icon("trash"), "Delete Sample")), 
+                                                        status = "danger")
                                    )
-                                  
+                                   
                                  } else if (samples$samples[input$samples_dt_rows_selected, "status"]=="Fail") {
                                    infoBox(title = "Report could not be generated" , value = "", 
                                            subtitle="See analysis logs tab to see the potential cause for error", 
@@ -138,75 +142,131 @@ user_server<-function(input, output, session, parameters, user){
                                            icon = icon("hourglass-half"), color = "olive", width = 12, fill = F)
                                  }
                                }
-                                 ), 
-                                 tabPanel(title = "Analysis Logs", icon=icon("clipboard-list"), 
-                                          # logs table go here
-                                          )
+                      ), 
+                      tabPanel(title = "Analysis Logs", icon=icon("tasks"), 
+                               if(is.null(samples$samples)){
+                                 NULL
+                               } else if (length(samples$samples) > 0  & is.null(input$samples_dt_rows_selected)){
+                                 tagList(
+                                   br(), 
+                                   br(),
+                                   infoBox(title = "Select sample to view logs", value = "", 
+                                           subtitle="Click on one of the samples to view analysis logs", 
+                                           icon = icon("list"), color = "light-blue", width = 12, fill = F)
+                                 )
+                               } else if (!is.null(input$samples_dt_rows_selected)){
+                                 output$log_table<-renderDT({
+                                   id<-samples$samples[input$samples_dt_rows_selected, "sampleid"]
+                                   logs<-"select * from samples_users.analysis where sampleid=?id"
+                                   logs<-sqlInterpolate(conn, logs, id=id)
+                                   logdf<-dbGetQuery(conn, logs)
+                                   logdf<-logdf[order(logdf$id),]
+                                   datatable(logdf[,-1], class="compact", rownames = F, 
+                                             extensions = 'Scroller',
+                                             options = list( deferRender = TRUE,
+                                                             scrollY = 450, scroller = TRUE,
+                                                             dom=c("t"), ordering=F), selection="none")
+                                 })
+                                   tagList(
+                                     tags$h3("Analysis Logs"),
+                                     br(),
+                                     DTOutput(session$ns("log_table"))
+                                   )
+                               }
                       )
+                    )
                   })
-                  )
-          ),
-          
-          
-          ########## Modals ###############
-          bsModal("account_settings_modal", "Account Settings", session$ns("account_settings"), size="large", 
-                  account_settings_ui(session$ns("account_settings_module"), user = user)
-          ),
-          bsModal("upload_sample_modal", "Upload New Sample", session$ns("upload_sample_button"), size="large", 
-                  upload_sample_ui(session$ns("upload_sample_module"))  
           )
+        ),
+        
+        
+        ########## Modals ###############
+        bsModal("account_settings_modal", "Account Settings", session$ns("account_settings"), size="large", 
+                account_settings_ui(session$ns("account_settings_module"), user = user)
+        ),
+        bsModal("upload_sample_modal", "Upload New Sample", session$ns("upload_sample_button"), size="large", 
+                upload_sample_ui(session$ns("upload_sample_module"))  
         )
+      )
     }
   })
-      
-      observeEvent(input$refresh_table, {
-        samp_query<-"select * from samples_users.samples where sampleid in 
+  
+  observeEvent(input$refresh_table, {
+    samp_query<-"select * from samples_users.samples where sampleid in 
                 (select sampleid from samples_users.samples_users_linked where userid=?id)"
-        samp_query<-sqlInterpolate(conn, samp_query, id=user$userid)
-        samp<-dbGetQuery(conn, samp_query)
-        samples$samples<-samp
-      })
+    samp_query<-sqlInterpolate(conn, samp_query, id=user$userid)
+    samp<-dbGetQuery(conn, samp_query)
+    samples$samples<-samp
+  })
+  
+  output$report_down<-downloadHandler(
+    filename <- function() {"report.pdf"},
+    content <- function(file){
+      file.copy(
+        paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
+               samples$samples[input$samples_dt_rows_selected, "samplename"], 
+               "/results/report.pdf"), file)
+    }
+  )
+  
+  output$bins_down<-downloadHandler(
+    filename <- function() {"CNVbins.igv"},
+    content <- function(file) {
+      file.copy(paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
+                       samples$samples[input$samples_dt_rows_selected, "samplename"], 
+                       "/results/CNVbins.igv"), file)
+    }
+  )
+  
+  output$details_down<-downloadHandler(
+    filename <- function() {"CNVdetail.txt"},
+    content <- function(file) {
+      file.copy(paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
+                       samples$samples[input$samples_dt_rows_selected, "samplename"], 
+                       "/results/CNVdetail.txt"), file)
+    }
+  )
+  
+  output$segments_down<-downloadHandler(
+    filename <- function() {"CNVsegments.seg"},
+    content <- function(file) {
+      file.copy(paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
+                       samples$samples[input$samples_dt_rows_selected, "samplename"], 
+                       "/results/CNVsegments.seg"), file)
+    }
+  )
+  
+  observeEvent(input$delete, {
+    confirmSweetAlert(session = session, inputId = session$ns("delete_confirm"), type = "danger", 
+                      title="Confirm Delete",
+                      text = "Are you sure want to delete this sample? This cannot be undone!", 
+                      btn_labels = c("Cancel", "Delete"), 
+                      btn_colors = c("#808080", "#CC0000"), 
+                      closeOnClickOutside = TRUE,
+                      showCloseButton = T)
+  })
+  
+  observeEvent(input$delete_confirm, {
+    if(input$delete_confirm){
+      NULL
+      #  tryCatch({
+      #    id<-samples$samples[input$samples_dt_rows_selected, "sampleid"]
+      #    del_query_samp<-"delete from samples_users.samples where sampleid=?id"
+      #    del_query_samp<-sqlInterpolate(conn, del_query_samp, id=id)
       
-      #TODO fix this for the sample at hand and apply for other files
-      output$report_down<-downloadHandler(
-        filename <- function() {"report.pdf"},
-        content <- function(file){
-          file.copy(
-            paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
-                   samples$samples[input$samples_dt_rows_selected, "samplename"], 
-                   "/results/report.pdf"), file)
-        }
-      )
+      #    del_query_link<-"delete from samples_users.samples_users_linked where sampleid=?id"
+      #    del_query_link<-sqlInterpolate(conn, del_query_link, id=id)
       
-      output$bins_down<-downloadHandler(
-        filename <- function() {"CNVbins.igv"},
-        content <- function(file) {
-          file.copy(paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
-                           samples$samples[input$samples_dt_rows_selected, "samplename"], 
-                           "/results/CNVbins.igv"), file)
-        }
-      )
+      #    unlink(paste0(parameters$samples_files,user$username,"/", id))    
+      #  })
       
-      output$details_down<-downloadHandler(
-        filename <- function() {"CNVdetail.txt"},
-        content <- function(file) {
-          file.copy(paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
-                           samples$samples[input$samples_dt_rows_selected, "samplename"], 
-                           "/results/CNVdetail.txt"), file)
-        }
-      )
-      
-      output$segments_down<-downloadHandler(
-        filename <- function() {"CNVsegments.seg"},
-        content <- function(file) {
-          file.copy(paste0(parameters$basepath, parameters$sample_files, user$username, "/", 
-                           samples$samples[input$samples_dt_rows_selected, "samplename"], 
-                           "/results/CNVsegments.seg"), file)
-        }
-      )
-      
-      callModule(account_settings_server, id = "account_settings_module", user=user, parameters=parameters)
-      callModule(upload_sample_server, "upload_sample_module",  user=user, parameters=parameters)
-      
-      
+    } else {
+      NULL
+    }
+  })
+  
+  callModule(account_settings_server, id = "account_settings_module", user=user, parameters=parameters)
+  callModule(upload_sample_server, "upload_sample_module",  user=user, parameters=parameters)
+  
+  
 }

@@ -26,7 +26,7 @@ for(module in modules){
   source(module)
 }
 
-ui<-navbarPage("Methylation App", theme = shinytheme("lumen"), inverse = F, selected = "home", 
+ui<-navbarPage("Methylation App", theme = shinytheme("cosmo"), inverse = F, selected = "home", 
                id = "tabs", collapsible = T, position="fixed-top",
                useShinydashboardPlus(),
                useShinyjs(),

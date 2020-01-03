@@ -16,7 +16,7 @@ login_server<-function(input, output, session, parameters, user){
     if(user$login){
       column(width = 1, offset = 11,
              tagList(
-               renderText(paste("Hello,", user$name)),
+               renderText(paste("Hello,", user$username)),
                actionLink(session$ns("logout_link"), label = paste("Logout"), icon=icon("sign-out-alt")),
                br()
              ))
