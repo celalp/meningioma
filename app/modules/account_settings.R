@@ -6,7 +6,7 @@ account_settings_ui<-function(id, user){
   userinfo<-"select * from samples_users.users where userid=?id"
   userinfo<-sqlInterpolate(conn, userinfo, id=isolate(user$userid))
   userinfo<-dbGetQuery(conn, userinfo)
-  samples<-"select count(*) from samples_users.samples where sampleid in (select userid from samples_users.users where userid=?id)"
+  samples<-"select count(*) from samples_users.samples_users_linked where userid=?id"
   samples<-sqlInterpolate(conn, samples, id=isolate(user$userid))
   samples<-dbGetQuery(conn, samples)$count
   fluidRow(

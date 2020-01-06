@@ -16,7 +16,7 @@ suppressPackageStartupMessages(library(shinyBS))
 suppressPackageStartupMessages(library(bsplus))
 suppressPackageStartupMessages(library(shinydashboardPlus))
 suppressPackageStartupMessages(library(yaml))
-
+suppressPackageStartupMessages(library(shinycssloaders))
 
 #parameteds is hardcoded do not move config.yaml file
 parameters<-yaml.load_file("../config.yaml")

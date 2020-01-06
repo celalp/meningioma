@@ -58,6 +58,7 @@ user_server<-function(input, output, session, parameters, user){
           
           ######### Reports Box ###########
           boxPlus(title = "Results", status = "info", collapsible = F, closable = F, width = 8,
+                  
                   output$reports<-renderUI({
                     tabsetPanel(
                       tabPanel(title = "Analysis", icon = icon("file"), 
@@ -85,7 +86,6 @@ user_server<-function(input, output, session, parameters, user){
                                                rownames = F, options = list( deferRender = TRUE, extensions = c('Responsive'), 
                                                                              dom=c("t"), ordering=F), selection="none")
                                    })
-                                   
                                    tagList(
                                      tags$h3("Sample info"),
                                      DTOutput(session$ns("selected_sample")),
@@ -128,21 +128,28 @@ user_server<-function(input, output, session, parameters, user){
                                    )
                                    
                                  } else if (samples$samples[input$samples_dt_rows_selected, "status"]=="Error! see analysis logs") {
-                                   br()
-                                   infoBox(title = "Report could not be generated" , value = "", 
-                                           subtitle="See analysis logs tab to see the potential cause for error", 
-                                           icon = icon("bug"), color = "maroon", width = 12, fill = F)
+                                   tagList(
+                                     br(),
+                                     br(),
+                                     infoBox(title = "Report could not be generated" , value = "", 
+                                             subtitle="See analysis logs tab to see the potential cause for error", 
+                                             icon = icon("bug"), color = "maroon", width = 12, fill = F)
+                                     
+                                   )
                                    
                                  } else {
-                                   br()
-                                   infoBox(title = "Report not yet available", value = "", 
-                                           subtitle="Click on one of the samples witih status 'Done' to view report", 
-                                           icon = icon("hourglass-half"), color = "olive", width = 12, fill = F)
+                                   tagList(
+                                     br(),
+                                     br(),
+                                     infoBox(title = "Report not yet available", value = "", 
+                                             subtitle="Click on one of the samples witih status 'Done' to view report", 
+                                             icon = icon("hourglass-half"), color = "olive", width = 12, fill = F)
+                                   )
                                  }
                                }
                       ), 
                       tabPanel(title = "Analysis Logs", icon=icon("tasks"), 
-                               if(is.null(samples$samples)){
+                               if(length(samples$samples)==0){
                                  NULL
                                } else if (length(samples$samples) > 0  & is.null(input$samples_dt_rows_selected)){
                                  tagList(
@@ -176,6 +183,7 @@ user_server<-function(input, output, session, parameters, user){
                       )
                     )
                   }),
+                  
                   
                   output$delete_ui<-renderUI({
                     if(nrow(samples$samples)==0){

@@ -19,6 +19,7 @@ suppressPackageStartupMessages(library(shinydashboard))
 suppressPackageStartupMessages(library(yaml))
 suppressPackageStartupMessages(library(bsplus))
 suppressPackageStartupMessages(library(shinyjs))
+suppressPackageStartupMessages(library(shinycssloaders))
 
 options(shiny.maxRequestSize=50*1024^2)
 
