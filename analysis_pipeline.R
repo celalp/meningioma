@@ -215,6 +215,9 @@ if(sample_info$who_grade!="NA" & sample_info$simpson_score!="NA"){
   newx<-matrix(c(as.numeric(sample_info$who_grade), as.numeric(sample_info$simpson_score), metp), nrow=1)
   colnames(newx)<-hdnom.varinfo(hdnom_model, x)$name
   recurrence_p<-predict(hdnom_model, as.matrix(x), as.matrix(y), newx, 5)[1]
+  recp<-"update samples_users.samples set recurrence_prob=?rec_p where sampleid=?id"
+  recp<-sqlInterpolate(conn, recp, id=args$sampleid, rec_p=recurrence_p)
+  dbSendStatement(conn, recp)
   prog_df<-data.frame(time=Sys.time(), message="recurrence prediction complete", status="Proceed", 
                       sampleid=args$sampleid)
   dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)

@@ -40,7 +40,7 @@ ui<-navbarPage("Methylation App", theme = shinytheme("cosmo"), inverse = F, sele
                         ########### ENABLE WHEN DONE ###########
                         #tags$head(tags$script("window.onbeforeunload = function() { return true; }")), 
                         #TODO have an html to source
-                        tags$img(src="img/micro2.jpg", style="width:100%;"), 
+                        
                         fluidRow(
                           column(width=8, offset = 2, 
                                  br(),
