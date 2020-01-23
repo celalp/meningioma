@@ -179,8 +179,8 @@ upload_sample_server<-function(input, output, session, user, parameters){
         createAlert(session, "sample_submission_alert", "sample_submission_alert_control", title = "", 
                     content = "We are having issues with submitting your sample for analysis please try again later 
                         if the problem persists please contact admin", style = "danger")
-        analysis<-data.frame(time=Sys.time(), message="analysis_init", status="fail", 
-                             username=user$username, samplename=input$upload_samplename)
+        analysis<-data.frame(time=Sys.time(), message="sample upload fail", status="fail", 
+                             sampleid=NULL)
         dbWriteTable(conn, "analysis", analysis, append=T, row.names=F)
         ready(F)
       })
