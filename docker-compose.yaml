@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  shinyproxy:
+    image: adoptopenjdk:8-jre-openj9
+    container_name: shinyproxy
+    ports:
+      - "8080:8080"
+    networks:
+      - farshad
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./shinyproxy:/opt/shinyproxy
+    working_dir: /opt/shinyproxy
+    command: java -jar shinyproxy-2.3.0.jar
+
+networks:
+  farshad:
+    name: farshad
