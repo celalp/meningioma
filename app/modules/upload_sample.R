@@ -131,7 +131,7 @@ upload_sample_server<-function(input, output, session, user, parameters){
       tryCatch({
         sampledir<-paste0(parameters$basepath, parameters$sample_files, user$username, "/", input$upload_samplename)
         dir.create(paste0(parameters$basepath, parameters$sample_files, user$username, "/", input$upload_samplename), 
-                   mode = 0600)
+                   mode = "0755")
         if(file.exists(input$green$datapath)){
           gcopy<-file.copy(input$green$datapath, sampledir)
           file.rename(from = paste0(sampledir, "/0.idat"), to = paste0(sampledir, "/", input$green$name))
