@@ -1,6 +1,21 @@
 version: "3.7"
 
 services:
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    environment: 
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=alper
+      - POSTGRES_DB=webapp
+    ports:
+      - "5432:5432"
+    networks:
+      - farshad
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/log:/var/log/postgresql
   shinyproxy:
     image: adoptopenjdk:8-jre-openj9
     container_name: shinyproxy
