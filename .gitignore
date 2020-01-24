@@ -4,3 +4,8 @@
 .Ruserdata
 db/data/
 db/log/
+files/
+analysis_logs/
+shinyproxy/*.jar
+shinyproxy/*.log
+shinyproxy/*.gz
