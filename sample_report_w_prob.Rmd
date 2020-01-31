@@ -31,6 +31,10 @@ kable(info_table, "latex", booktabs=T) %>%
 
 ## **Results**
 
+**Detection p value** `r qc_pval`
+
+- This is the average probability of proper signature detection. A value > 0.05 indicates poor sample quality
+
 **5-year methylome probability:** `r metp`
 
 - This is the probability of 5-year recurrence using a methylome signature derived from the tumour

@@ -90,10 +90,10 @@ user_server<-function(input, output, session, parameters, user){
                                      tags$h3("Sample info"),
                                      DTOutput(session$ns("selected_sample")),
                                      br(),
-                                     tags$h4("Detection p value:"),
-                                     tags$p(renderText(selected_sample$detection_p)),
-                                     tags$p(renderText("This is the average probability of proper signature detection. 
-                                          A value > 0.05 indicates poor sample quality")),
+                                     #tags$h4("Detection p value:"),
+                                     #tags$p(renderText(selected_sample$detection_p)),
+                                     #tags$p(renderText("This is the average probability of proper signature detection. 
+                                     #      A value > 0.05 indicates poor sample quality")),
                                      tags$h4("5-year methylome probability:"),
                                      tags$p(renderText(selected_sample$methylome_prob)),
                                      tags$p(renderText("This is the probability of 5-year recurrence using a methylome signature derived from the tumour")),
@@ -185,17 +185,17 @@ user_server<-function(input, output, session, parameters, user){
                   }),
                   
                   
-                  output$delete_ui<-renderUI({
-                    if(nrow(samples$samples)==0){
-                      NULL
-                    } else if (nrow(samples$samples) > 0  & is.null(input$samples_dt_rows_selected)) {
-                      NULL
-                    } else {
-                      actionGroupButtons(inputIds = c(session$ns("delete")), 
-                                         labels = list(tags$span(icon("trash"), "Delete Sample")), 
-                                         status = "danger")
-                    }
-                  })
+                  #output$delete_ui<-renderUI({
+                  #  if(nrow(samples$samples)==0){
+                  #    NULL
+                  #  } else if (nrow(samples$samples) > 0  & is.null(input$samples_dt_rows_selected)) {
+                  #    NULL
+                  #  } else {
+                  #    actionGroupButtons(inputIds = c(session$ns("delete")), 
+                  #                       labels = list(tags$span(icon("trash"), "Delete Sample")), 
+                  #                       status = "danger")
+                  #  }
+                  #})
           )
         ),
         
@@ -256,64 +256,60 @@ user_server<-function(input, output, session, parameters, user){
     }
   )
   
-  observeEvent(input$delete, {
-    confirmSweetAlert(session = session, inputId = session$ns("delete_confirm"), type = "danger", 
-                      title="Confirm Delete",
-                      text = "Are you sure want to delete this sample? This cannot be undone!", 
-                      btn_labels = c("Cancel", "Delete"), 
-                      btn_colors = c("#808080", "#CC0000"), 
-                      closeOnClickOutside = TRUE,
-                      showCloseButton = T)
-  })
+  #observeEvent(input$delete, {
+  #  confirmSweetAlert(session = session, inputId = session$ns("delete_confirm"), type = "danger", 
+  #                    title="Confirm Delete",
+  #                    text = "Are you sure want to delete this sample? This cannot be undone!", 
+  #                    btn_labels = c("Cancel", "Delete"), 
+  #                    btn_colors = c("#808080", "#CC0000"), 
+  #                    closeOnClickOutside = TRUE,
+  #                    showCloseButton = T)
+  #})
   
-  observeEvent(input$delete_confirm, {
-    if(input$delete_confirm){
-      id<-samples$samples[input$samples_dt_rows_selected, "sampleid"]
-      name<-samples$samples[input$samples_dt_rows_selected, "samplename"]
-      print(name)
-      tryCatch({
-        withProgress(message = paste("Removing sample", name), {
-          incProgress(amount = 1/7, detail = "gathering information")
-          
-          del_query_samp<-"delete from samples_users.samples where sampleid=?id"
-          del_query_samp<-sqlInterpolate(conn, del_query_samp, id=id)
-          dbSendStatement(conn, del_query_samp)
-          incProgress(amount = 1/7, detail = "deleted from database 1/3")
-          
-          del_query_link<-"delete from samples_users.samples_users_linked where sampleid=?id"
-          del_query_link<-sqlInterpolate(conn, del_query_link, id=id)
-          dbSendStatement(conn, del_query_link)
-          incProgress(amount = 1/7, detail = "deteled from database 2/3")
-          
-          del_query_analysis<-"delete from samples_users.analysis where sampleid=?id"
-          del_query_analysis<-sqlInterpolate(conn, del_query_analysis, id=id)
-          dbSendStatement(conn, del_query_analysis)
-          incProgress(amount = 1/7, detail = "deteled from database 3/3")
-          
-          unlink(paste0(parameters$basepath, parameters$sample_files, user$username,"/", name), recursive = T)
-          incProgress(amount = 1/7, detail = "deleted sample files and results")
-          
-          unlink(paste0(parameters$basepath, parameters$analysis$logs, id, ".log"))
-          incProgress(amount = 1/7, detail = "deleted log files")
-          
-          incProgress(amount = 1/7, detail = "Done")
-          showNotification(ui = paste(name, "remmoved from the system it may take up to", 
-                                      parameters$backup$frequency, "days for the data to be completeley removed from 
-                                 all backups"), type="default", session=session)
-        })
-      }, error=function(e){
-        showNotification(ui = "There was an error removing the sample from our system. Please contact admin to remove the sample manually", 
-                         duration=NULL, type="error")
-        
-      })
-      
-      
-      
-      
-    } else {
-      NULL
-    }
-  })
+  #observeEvent(input$delete_confirm, {
+  #  if(input$delete_confirm){
+  #    id<-samples$samples[input$samples_dt_rows_selected, "sampleid"]
+  #    name<-samples$samples[input$samples_dt_rows_selected, "samplename"]
+  #    print(name)
+  #    tryCatch({
+  #      withProgress(message = paste("Removing sample", name), {
+  #        incProgress(amount = 1/7, detail = "gathering information")
+  #        
+  #        del_query_samp<-"delete from samples_users.samples where sampleid=?id"
+  #        del_query_samp<-sqlInterpolate(conn, del_query_samp, id=id)
+  #        dbSendStatement(conn, del_query_samp)
+  #        incProgress(amount = 1/7, detail = "deleted from database 1/3")
+  #        
+  #        del_query_link<-"delete from samples_users.samples_users_linked where sampleid=?id"
+  #        del_query_link<-sqlInterpolate(conn, del_query_link, id=id)
+  #        dbSendStatement(conn, del_query_link)
+  #        incProgress(amount = 1/7, detail = "deteled from database 2/3")
+  #        
+  #        del_query_analysis<-"delete from samples_users.analysis where sampleid=?id"
+  #        del_query_analysis<-sqlInterpolate(conn, del_query_analysis, id=id)
+  #        dbSendStatement(conn, del_query_analysis)
+  #        incProgress(amount = 1/7, detail = "deteled from database 3/3")
+  #        
+  #        unlink(paste0(parameters$basepath, parameters$sample_files, user$username,"/", name), recursive = T)
+  #        incProgress(amount = 1/7, detail = "deleted sample files and results")
+  #        
+  #        unlink(paste0(parameters$basepath, parameters$analysis$logs, id, ".log"))
+  #        incProgress(amount = 1/7, detail = "deleted log files")
+  #        
+  #        incProgress(amount = 1/7, detail = "Done")
+  #        showNotification(ui = paste(name, "remmoved from the system it may take up to", 
+  #                                    parameters$backup$frequency, "days for the data to be completeley removed from 
+  #                               all backups"), type="default", session=session)
+  #      })
+  #    }, error=function(e){
+  #      showNotification(ui = "There was an error removing the sample from our system. Please contact admin to remove the sample manually", 
+  #                       duration=NULL, type="error")
+  #      
+  #    })
+  #  } else {
+  #    NULL
+  #  }
+  #})
   
   callModule(account_settings_server, id = "account_settings_module", user=user, parameters=parameters)
   callModule(upload_sample_server, "upload_sample_module",  user=user, parameters=parameters)
