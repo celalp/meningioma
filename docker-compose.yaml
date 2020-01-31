@@ -1,0 +1,34 @@
+version: "3.7"
+
+services:
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    environment: 
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=alper
+      - POSTGRES_DB=webapp
+    ports:
+      - "5432:5432"
+    networks:
+      - farshad
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/log:/var/log/postgresql
+  shinyproxy:
+    image: adoptopenjdk:8-jre-openj9
+    container_name: shinyproxy
+    ports:
+      - "8080:8080"
+    networks:
+      - farshad
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./shinyproxy:/opt/shinyproxy
+    working_dir: /opt/shinyproxy
+    command: java -jar shinyproxy-2.3.0.jar
+
+networks:
+  farshad:
+    name: farshad

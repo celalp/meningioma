@@ -2,4 +2,14 @@
 .Rhistory
 .RData
 .Ruserdata
+<<<<<<< HEAD
 secrets.yaml
+=======
+db/data/
+db/log/
+files/
+analysis_logs/
+shinyproxy/*.jar
+shinyproxy/*.log
+shinyproxy/*.gz
+>>>>>>> cf805a6b8ebf4f8ce102c8370b5425daa38d0e29
