@@ -233,6 +233,10 @@ prog_df<-data.frame(time=Sys.time(), message="Generating pdf report", status="Pr
                     sampleid=args$sampleid)
 dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)
 
+sample_query<-"select * from samples_users.samples where sampleid=?id"
+sample_query<-sqlInterpolate(conn, sample_query, id=args$sampleid)
+sample_info<-dbGetQuery(conn, sample_query)
+
 report_path<-paste0(parameters$basepath, parameters$analysis$rmd)
 file.copy(report_path, paste0(results_path, "/sample_report.Rmd"), overwrite = T)
 render(input = paste0(results_path, "/sample_report.Rmd"), output_file = "report.pdf")

@@ -27,11 +27,13 @@ for(module in modules){
 }
 
 ui<-navbarPage("Methylation App", theme = shinytheme("cosmo"), inverse = F, selected = "home", 
-               id = "tabs", collapsible = T, position="fixed-top",
+               id = "tabs", collapsible = T, position="static-top",
                useShinydashboardPlus(),
+               #themeSelector(),
                useShinyjs(),
                # home page is a static page, the entire UI will be rendered here
                tabPanel("Home", icon = icon("home"), value = "home", 
+                        tags$img(src="img/micro2.jpg", style="width:100%;"),
                         br(),
                         br(),
                         br(),
@@ -40,7 +42,7 @@ ui<-navbarPage("Methylation App", theme = shinytheme("cosmo"), inverse = F, sele
                         ########### ENABLE WHEN DONE ###########
                         #tags$head(tags$script("window.onbeforeunload = function() { return true; }")), 
                         #TODO have an html to source
-                        
+                         
                         fluidRow(
                           column(width=8, offset = 2, 
                                  br(),
