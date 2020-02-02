@@ -182,7 +182,7 @@ user_server<-function(input, output, session, parameters, user){
                                }
                       )
                     )
-                  }),
+                  })#,
                   
                   
                   #output$delete_ui<-renderUI({
