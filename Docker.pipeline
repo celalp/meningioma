@@ -8,20 +8,21 @@ RUN apt-get update --yes && \
     apt-get install libxml2 --yes && \
     apt-get install libcurl4-openssl-dev --yes && \
     apt-get install libssl-dev --yes && \
-    apt-get install libxml2-dev --yes && \
-    apt-get install texlive-full --yes
+    apt-get install libxml2-dev --yes
+
+RUN apt-get install texlive-full --yes
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 
 RUN apt-get install software-properties-common --yes
 
-RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
+RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/'
+
+RUN apt-get install libpq-dev --yes
 
 RUN apt-get update --yes
 
 RUN apt install r-base --yes
-
-RUN apt-get install libpq-dev --yes
 
 COPY ./install_pipepacks.R app/install_pipepacks.R
 

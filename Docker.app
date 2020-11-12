@@ -15,13 +15,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get install software-properties-common --yes
 
-RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
+RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/'
 
 RUN apt-get update --yes
 
-RUN apt install r-base --yes
-
 RUN apt-get install libpq-dev --yes
+
+RUN apt install r-base --yes
 
 COPY ./install_apppacks.R app/install_apppacks.R
 
