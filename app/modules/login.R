@@ -109,9 +109,9 @@ login_server<-function(input, output, session, parameters, user){
       } else if (nrow(user_info)==1){ # we got a hit this user is logging in
         closeAlert(session, "login_alert_control")
         if(!user_info$active & !dir.exists(paste0(parameters$basepath, parameters$sample_files, user_info$username))){ 
-          #first time log in so need to creat a home directory
+          #first time log in so need to create a home directory
           tryCatch({
-            dir.create(paste0(parameters$basepath, parameters$sample_files, user_info$username), mode=0600)
+            dir.create(paste0(parameters$basepath, parameters$sample_files, user_info$username), mode="0766")
             activate<-"update samples_users.users set active='t' where username=?username"
             activate<-sqlInterpolate(conn, activate, username=user_info$username)
             dbSendStatement(conn, activate)
@@ -283,7 +283,7 @@ login_server<-function(input, output, session, parameters, user){
     access<-data.frame(time=Sys.time(), username=user$username, action="logout", status="success")
     dbWriteTable(conn, "access", access, append=T, row.names=F)
     user$userid<-NULL
-    user$username=NULL
+    user$username<-NULL
     user$admin=F
     user$login=F
   })

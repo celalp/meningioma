@@ -33,7 +33,6 @@ for(module in modules){
 }
 
 server<-function(input, output, session){
-  
   #database connection making it a global variable
   conn<<-dbConnect(drv = PostgreSQL(), parameters$database$host, 
                   user=parameters$database$username, 
@@ -74,6 +73,8 @@ server<-function(input, output, session){
   #TODO errorcheck
   session$onSessionEnded(
     function(){
+      #access<-data.frame(time=Sys.time(), username=user_login_info$username, action="logout", status="success")
+      #dbWriteTable(conn, "access", access, append=T, row.names=F)
       dbDisconnect(conn = conn)
     }
   )  

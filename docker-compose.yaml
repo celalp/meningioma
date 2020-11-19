@@ -5,13 +5,13 @@ services:
     image: postgres:alpine
     container_name: postgres
     environment: 
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=alper
-      - POSTGRES_DB=webapp
+      - POSTGRES_PASSWORD=27603e12416d8d5af5862e3ed4ce890d
+      - POSTGRES_USER=methylation
+      - POSTGRES_DB=methylation
     ports:
       - "5432:5432"
     networks:
-      - farshad
+      - webapp
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
       - ./db/data:/var/lib/postgresql/data
@@ -22,7 +22,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - farshad
+      - webapp
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./shinyproxy:/opt/shinyproxy
@@ -30,5 +30,5 @@ services:
     command: java -jar shinyproxy-2.3.0.jar
 
 networks:
-  farshad:
-    name: farshad
+  webapp:
+    name: webapp

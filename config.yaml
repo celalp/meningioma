@@ -6,9 +6,9 @@
 
 basepath: ""
 database:
-  name: webapp
-  username: alper
-  password: password
+  name: methylation
+  username: methylation
+  password: 27603e12416d8d5af5862e3ed4ce890d
   host: localhost
   port: 5432
 sample_files: ../files/
@@ -31,7 +31,5 @@ analysis:
   extrasample: data/extrasample
   externaldata: data/externaldata
   functions: functions.R
-backup: 
-  script: backup.sh
-  frequency: 7
+
 

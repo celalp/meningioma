@@ -1,34 +1,33 @@
-Terms and Conditions
-=======================
+By using this website and our meningioma recurrence nomogram, you do so with the understanding that this is a research tool still currently under development. It has not been verified nor has it been clinically validated. Implementation of the results of this nomogram in a clinical setting is in the sole responsibility of the treating clinician and will be done so at their discretion entirely without any responsibility or liability on our part.
+We accept no responsibility or liability whatsoever with regard to material on this site. This material is information of a general nature only, not intended to address the specific circumstances of any particular individual or entity. This information is not necessarily comprehensive, complete, accurate, or up to date. Nothing on this website represents professional or medical advice (if you require medical advice you should always consult a suitable and qualified medical professional). Some webpages are linked to external sites for which we have no purview or control. Links have been provided during the setup of this website. Since our website may undergo change and updates, we accept no responsibility with regards to problems or consequences thereof incurred as a result of using this site or any linked external sites. This disclaimer is not intended to contravene any requirements laid down in applicable national or local law nor to exclude liability for matters which may not be excluded under the law. 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dolor metus, congue 
-sit amet ullamcorper id, vestibulum vitae dui. Duis tempor velit sit amet mattis feugiat. 
-Suspendisse suscipit, purus vitae consectetur blandit, est turpis pretium ligula, nec 
-porta magna libero eu tortor. Aliquam erat volutpat. Curabitur iaculis orci elit, 
-nec laoreet ipsum finibus nec. Vivamus eget maximus eros. Donec quis feugiat enim. 
-Vestibulum sodales, arcu sit amet viverra gravida, ex mauris efficitur ex, a tempus 
-turpis sapien semper nulla. Suspendisse id nulla ultrices, consectetur augue in, egestas t
-urpis. Etiam placerat varius imperdiet. Cras euismod vitae purus sed viverra. Pellentesque 
-ac rutrum velit. Cras ac vulputate velit, non ultricies tortor.
+We undertake every precaution to protect the private information of all individuals using this website and to treat any personal information with the strictest security and confidence. The information is solely used for the respective purposes as requested and will not be passed onto third parties with our knowledge. Any personal information will be deleted as soon as it has served its given purpose. Your web browser or client software may transfer information without your knowledge via your computer (for example IP address) to our server. This information is never brought in direct connection with you, but is evaluated in anonymous form for statistical purposes for system management or to improve the efficiency of our internet platform.
 
-Integer consequat quam in enim tempor tristique. Mauris quis pulvinar neque. 
-Integer non cursus diam. Vivamus interdum erat sed mauris vestibulum finibus. Pellentesque 
-vel consectetur lectus. Nulla urna turpis, cursus vel mi ac, efficitur mattis sapien. 
-Nunc enim libero, malesuada et lobortis eu, dapibus in est. Vivamus nulla tellus, fermentum 
-nec erat a, dictum blandit purus. Vestibulum vehicula posuere pulvinar. Nunc at placerat 
-neque. Nulla ut scelerisque quam.
+This web interface is intended for noncommercial use only. 
 
-Integer consequat quam in enim tempor tristique. Mauris quis pulvinar neque. 
-Integer non cursus diam. Vivamus interdum erat sed mauris vestibulum finibus. 
-Pellentesque vel consectetur lectus. Nulla urna turpis, cursus vel mi ac, efficitur 
-mattis sapien. Nunc enim libero, malesuada et lobortis eu, dapibus in est. Vivamus nulla 
-tellus, fermentum nec erat a, dictum blandit purus. Vestibulum vehicula posuere pulvinar. 
-Nunc at placerat neque. Nulla ut scelerisque quam.
+The tool described below was developed by The University of Toronto and Dr. Gelareh Zadeh’s lab (ZadehLab)  – hereinafter known as Supplier – This leasing contract deals with the tool and serves only scientific purposes, but has not been validated clinically and constitutes neither a medical treatment concept nor is it designed to be used for diagnostic purposes.
 
-Integer consequat quam in enim tempor tristique. Mauris quis pulvinar neque. 
-Integer non cursus diam. Vivamus interdum erat sed mauris vestibulum finibus. 
-Pellentesque vel consectetur lectus. Nulla urna turpis, cursus vel mi ac, efficitur 
-mattis sapien. Nunc enim libero, malesuada et lobortis eu, dapibus in est. Vivamus n
-ulla tellus, fermentum nec erat a, dictum blandit purus. Vestibulum vehicula 
-posuere pulvinar. Nunc at placerat neque. Nulla ut scelerisque quam.
 
+**Section 1:**  Subject-matter of the contract. On this website the Supplier provides access free of charge to a tool with a DNA based tumor recurrence prediction algorithm.
+A contract shall materialise between the Supplier and the User without a consideration having to be paid when the tool is used and the User grants his consent to these terms and conditions of use.
+These terms and conditions of use alone shall apply. Other contractual terms and conditions shall not become the content of this contract of use.
+
+**Section 2** Type of Use. A distinction is to be made between the use of the platform purely for information purposes (for everyone without registration being required). Active use of the tool by persons registered and therefore authorised to do so. In particular: the requirement for registration /authentication, including consent to the data protection declaration. The registered user may upload so-called IDAT files about tumour samples of interest to him enabling him to use the recurrence nomogram. The Supplier provides the User with instructions for using the platform for downloading under the heading “Instructions for use”. The User is obliged to obey the instructions in it regarding platform access, data base access, data base research as well as molecular classifications.
+
+**Section 3** Scope of the Right of Use. The Supplier alone is entitled to all rights to the tool – in particular patent right and copyright. Insofar as parts of the tool are subject to a general public licence, the above-named restriction shall not apply. The right of use may be revoked by the Supplier if he has an important reason for doing so. This type of reason shall be extant in particular in the event of a breach against these terms and conditions. The User must not modify the tool.
+
+**Section 4** Availability. The Supplier shall not furnish any warranty that the software will be continuously available. In particular, the Supplier shall reserve the right to put the tool offline at any time without prior notice on a permanent or temporary basis. Modifications, adjustments and additions to the tool as well as measures serving to identify and rectify malfunctions shall only result in temporary stoppage or impairment of availability in those cases in which this is absolutely essential for technical reasons. The Supplier shall endeavour to draw attention on the website in good time to impending maintenance or support work.
+
+**Section 5** Updating software. The Supplier does not have a contractual or statutory obligation to maintain the tool. The Supplier is entitled to modify the tool including its service offer and its user interface. The Supplier shall endeavour to provide information about the corresponding modifications concerning this on time through his website.
+
+**Section 6** Registration. A User must be registered prior to using the tool. He shall be obliged to give the Supplier correct and full responses to the data requested during registration. Important objectives of the tool are the expansion of the reference database with DNA methylation profiles, a comparison of individual methylation profiles of a tumour with the reference data base. The Supplier shall therefore reserve the right to only guarantee those users access who can prove that they have a relevant scientific or medical interest. After registration, the User shall receive user identification and a password. The User shall have to protect and keep the user identification allocated to him and the password safe from access by third parties. If, an incorrect password is entered on three consecutive occasions during registration using the same user identification, the connection will be cut off. The user identification and the password must not be handed over to third parties. If the User breaches the above duties, he will be blocked from accessing the tool.
+
+**Section 7** Technical preconditions. The User shall have to comply with the requirements defined under the heading “technical preconditions” in order to have uninterrupted access to the website and its contents. The User shall be personally responsible for maintaining compliance with the corresponding preconditions. The Supplier cannot be held liable for the security and existence of data communication. The Supplier cannot be held liable either for stoppages in data transmission caused by technical defects or configuration problems on the User’s side.
+
+**Section 8** Function. The function of the tool is described under "upload sample". Further information about how the recurrence nomogram works is in the website under ”Nomogram".
+
+**Section 9** Granting rights of use. The tool as well as the individual contents are – unless stated otherwise – protected by copyright. The User is obliged to comply with the existing copyrights and he shall undertake not to breach them. The User may only call off, store and use the contents for his own use. The User is not authorised to modify the contents, reproduce them for third parties, make them accessible, forward them, sell them or to exploit them commercially by other means. The Supplier is entitled to use the information and IDAT files uploaded by the Users to expand the reference database, - should the User agree to this procedure on the basis of a declaration of consent by the patients – to improve the classification algorithm for scientific purposes. This includes the publication of corresponding publications by the Supplier.
+
+**Section 10** Reservation of future remuneration. The tool may be used free of charge. The Supplier shall reserve the right to demand a remuneration for the use of the tool.
+
+**Section 11** Data Protection / Collection of User Data. The Supplier shall not collect any personal data when using the tool. The Supplier shall, however, undertake moreover, to comply with the regulations of the regional data protection act for Baden-Württemberg as well as special legal regulations over and above this, insofar as

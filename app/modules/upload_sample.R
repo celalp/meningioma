@@ -114,7 +114,8 @@ upload_sample_server<-function(input, output, session, user, parameters){
   
   output$sample_submit<-renderUI({
     if(ready() & !sexists()){
-      tagList(actionButton(session$ns("process_sample"), "Process Sample", icon=icon("terminal")))
+      tagList(br(), 
+              actionButton(session$ns("process_sample"), "Process Sample", icon=icon("terminal")))
     } else {
       NULL
     }
@@ -131,7 +132,8 @@ upload_sample_server<-function(input, output, session, user, parameters){
       tryCatch({
         sampledir<-paste0(parameters$basepath, parameters$sample_files, user$username, "/", input$upload_samplename)
         dir.create(paste0(parameters$basepath, parameters$sample_files, user$username, "/", input$upload_samplename), 
-                   mode = "0755")
+                   mode = "0766")
+        print("dir create")
         if(file.exists(input$green$datapath)){
           gcopy<-file.copy(input$green$datapath, sampledir)
           file.rename(from = paste0(sampledir, "/0.idat"), to = paste0(sampledir, "/", input$green$name))
