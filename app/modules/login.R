@@ -1,5 +1,22 @@
 # this module handes login/logout and signup and password reset
 
+jscode <- '
+$(function() {
+  var $els = $("[data-proxy-click]");
+  $.each(
+    $els,
+    function(idx, el) {
+      var $el = $(el);
+      var $proxy = $("#" + $el.data("proxyClick"));
+      $el.keydown(function (e) {
+        if (e.keyCode == 13) {
+          $proxy.click();
+        }
+      });
+    }
+  );
+});
+'
 
 login_ui<-function(id){
   ns<-NS(id)
@@ -12,7 +29,7 @@ login_server<-function(input, output, session, parameters, user){
   
   enc<-get(parameters$encryption$algorithm)
   
-  output$login_page<-renderUI({
+  output$login_page<-renderUI({    
     if(user$login){
       column(width = 1, offset = 11,
              tagList(
@@ -21,6 +38,7 @@ login_server<-function(input, output, session, parameters, user){
                br()
              ))
     } else {
+      tags$head(tags$script(HTML(jscode)))
       column(width=4, offset = 4,
              wellPanel(
                tabsetPanel(id=session$ns("login_tabs"),
@@ -28,7 +46,10 @@ login_server<-function(input, output, session, parameters, user){
                                     br(),
                                     br(),
                                     textInput(inputId = session$ns("login_username"), "Username", value = ""),
-                                    passwordInput(inputId = session$ns("login_password"), "Password", value = ""),
+                                    tagAppendAttributes(
+                                      passwordInput(inputId = session$ns("login_password"), "Password", value = ""),
+                                      'data-proxy-click'="login_screen-login_button"
+                                    ),
                                     # this is a modal
                                     actionLink(inputId = session$ns("forgot_password"), "Forgot password"),
                                     bsModal("forgot_password_show", "Reset password", session$ns("forgot_password"), size="small", 

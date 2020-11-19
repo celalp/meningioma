@@ -1,10 +1,10 @@
-version: "3.7"
+version: "3.8"
 
 services:
   postgres:
     image: postgres:alpine
     container_name: postgres
-    environment: 
+    environment: # make this an env file
       - POSTGRES_PASSWORD=27603e12416d8d5af5862e3ed4ce890d
       - POSTGRES_USER=methylation
       - POSTGRES_DB=methylation
@@ -16,9 +16,11 @@ services:
       - ./db/init:/docker-entrypoint-initdb.d
       - ./db/data:/var/lib/postgresql/data
       - ./db/log:/var/log/postgresql
+
   shinyproxy:
     image: adoptopenjdk:8-jre-openj9
     container_name: shinyproxy
+    depends_on: postgres
     ports:
       - "8080:8080"
     networks:
@@ -28,6 +30,16 @@ services:
       - ./shinyproxy:/opt/shinyproxy
     working_dir: /opt/shinyproxy
     command: java -jar shinyproxy-2.3.0.jar
+
+  pipeline:
+    build: 
+      context: ./
+      dockerfile: Docker.pipeline
+    networks: webapp
+    depends_on:
+      - postgres
+    volumes:
+      - ./app:./
 
 networks:
   webapp:
