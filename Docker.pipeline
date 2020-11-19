@@ -30,6 +30,8 @@ RUN Rscript app/install_pipepacks.R
 
 RUN useradd pipeline
 
+RUN mkdir -p /home/pipeline/.cache/R/R.cache
+
 USER pipeline
 
 

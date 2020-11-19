@@ -5,3 +5,5 @@ BiocManager::install(c("minfi", "conumee", "CopyNeutralIMA", "argparse", "DBI", 
 	"knitr", "dplyr", "kableExtra", "minfiData"))
 
 devtools::install_github("markgene/maxprobes")
+
+devtools::install_version("hdnom", version = "5.0", repos = "http://cran.us.r-project.org", )

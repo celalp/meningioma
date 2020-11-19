@@ -25,11 +25,11 @@ app_files:
     account_settings: modules/account_settings.R
     upload_sample: modules/upload_sample.R
 analysis:
-  pipeline: analysis_pipeline.R
+  pipeline: analysis/analysis_pipeline.R
   rmd: sample_report.Rmd
   logs: analysis_logs/
-  extrasample: data/extrasample
-  externaldata: data/externaldata
+  extrasample: extrasample
+  externaldata: externaldata
   functions: functions.R
 
 
