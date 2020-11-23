@@ -4,7 +4,7 @@
 # instead create a backup and add that to your git 
 # and the filled file to your .gitignore
 
-basepath: ""
+basepath: "."
 database:
   name: methylation
   username: methylation
