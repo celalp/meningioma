@@ -1,20 +1,19 @@
 proxy:
   title: METHYLATION APP
-  logo-url: https://ccm.sickkids.ca/wp-content/uploads/2014/12/ccm-computer-300x253.png
-  landing-page: /
+  landing-page: /app/webapp
   heartbeat-rate: 10000
   heartbeat-timeout: 60000
   port: 8080
   authentication: none
-  admin-groups: ccm
+  hide-navbar: true
   specs:
-  - id: 01_hello
-    display-name: Hello Application
-    description: Application which demonstrates the basics of a Shiny app
-    container-cmd: ["R", "-e", "shinyproxy::run_01_hello()"]
-    container-image: openanalytics/shinyproxy-demo
-    container-network: farshad
-    access-groups: ccm
+  - id: webapp
+    display-name: Methylation Webapp
+    description: Shiny web application for Zadeh lab
+    container-cmd: ["R", "-e", "shiny::runApp(appDir='/opt/app/app')"]
+    container-image: app:latest
+    container-network: webapp
+    container-volumes: ["/home/alper/Documents/webapp/meningioma:/opt/app"]
 
 logging:
   file:

@@ -17,15 +17,11 @@ RUN apt-get update --yes && \
     apt-get update --yes && \
     apt install r-base --yes
 
-COPY ./install_pipepacks.R /app/install_pipepacks.R
+COPY ./install_pipepacks.R /opt/app/install_pipepacks.R
 
-RUN Rscript app/install_pipepacks.R && \
-    useradd pipeline && \
-    mkdir -p /home/pipeline/.cache/R/R.cache
+RUN Rscript /opt/app/install_pipepacks.R 
 
-USER pipeline
+WORKDIR /opt/app/
 
-WORKDIR app
-
-ENTRYPOINT bash analysis/watcher.sh
+ENTRYPOINT bash analysis/watcher.sh ../config.yaml
 

@@ -4,12 +4,12 @@
 # instead create a backup and add that to your git 
 # and the filled file to your .gitignore
 
-basepath: "."
+basepath: "./"
 database:
   name: methylation
   username: methylation
   password: 27603e12416d8d5af5862e3ed4ce890d
-  host: localhost
+  host: postgres #needs to be postgres if using docker-compose
   port: 5432
 sample_files: ../files/
 encryption:
@@ -25,9 +25,9 @@ app_files:
     account_settings: modules/account_settings.R
     upload_sample: modules/upload_sample.R
 analysis:
-  pipeline: analysis/analysis_pipeline.R
+  pipeline: /analysis/analysis_pipeline.R
   rmd: sample_report.Rmd
-  logs: analysis_logs/
+  logs: /analysis_logs
   extrasample: extrasample
   externaldata: externaldata
   functions: functions.R

@@ -27,13 +27,9 @@ COPY ./install_apppacks.R app/install_apppacks.R
 
 RUN Rscript app/install_apppacks.R
 
-RUN useradd -ms /bin/bash application
+RUN mkdir /opt/app
 
-USER application
-
-RUN mkdir /home/application/app
-
-WORKDIR /home/application/app
+WORKDIR /opt/app
 
 
 

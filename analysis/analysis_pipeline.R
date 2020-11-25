@@ -32,15 +32,13 @@ while(T){
    # here the analysis is done one by one to make sure that we don't run out of resources. 
     for(sample in unlist(queued_sample_info$sampleid)){
       # redirect file output
-      log_path<-file(paste0("../", parameters$basepath, "/", parameters$analysis$logs, sample, ".log"), open = "a")
+      log_path<-file(paste0("../", parameters$basepath, "/", parameters$analysis$logs, "/", sample, ".log"), open = "a")
       sink(log_path, type = "message")
-      
       sample_info<-queued_sample_info[queued_sample_info$sampleid==sample, ]
       user_query<-"select username from users where userid=(select userid from samples_users_linked where sampleid=?id)"
       user_query<-sqlInterpolate(conn, user_query, id=sample)
       username<-dbGetQuery(conn, user_query)
-      basepath<-paste0(parameters$basepath, "/", parameters$sample_files, unlist(username), "/", sample_info$samplename)
-      message(basepath)
+      basepath<-paste0(parameters$basepath, parameters$sample_files, unlist(username), "/", sample_info$samplename)
       
       message(paste("starting analysis for sample", sample))
       
@@ -59,7 +57,6 @@ while(T){
       suppressPackageStartupMessages(library(minfi))
       suppressPackageStartupMessages(library(conumee))
       suppressPackageStartupMessages(library(CopyNeutralIMA))
-      suppressPackageStartupMessages(library(R.filesets))
       suppressPackageStartupMessages(library(maxprobes))
       suppressPackageStartupMessages(library(limma))
       suppressPackageStartupMessages(library(RColorBrewer))
@@ -101,7 +98,7 @@ while(T){
       message("loading annotations")
       
       if(array_type=="450k"){
-        MsetCtrl <- loadRDS(paste0(parameters$analysis$externaldata,"/", "450K_control.Rds"))
+        MsetCtrl <- readRDS(paste0(parameters$analysis$externaldata,"/", "450K_control.Rds"))
         library(IlluminaHumanMethylation450kmanifest)
         library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
         load(file = paste0(parameters$analysis$extrasample, "/", "450K_1ExtraSample_RGset.RData"))
@@ -109,7 +106,7 @@ while(T){
                             sampleid=sample)
         dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)
       } else if (array_type=="EPIC"){
-        MsetCtrl <- loadRDS(paste0(parameters$analysis$externaldata, "/", "EPIC_control.Rds"))
+        MsetCtrl <- readRDS(paste0(parameters$analysis$externaldata, "/", "EPIC_control.Rds"))
         library(IlluminaHumanMethylationEPICmanifest)
         library("IlluminaHumanMethylationEPICanno.ilm10b4.hg19")
         load(file = paste0(parameters$analysis$extrasample, "/", "EPIC_1ExtraSample_RGset.RData"))
