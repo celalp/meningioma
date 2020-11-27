@@ -13,23 +13,24 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD5
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get install software-properties-common --yes
+RUN apt-get install software-properties-common --yes && \
+	add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/' && \
+	apt-get update --yes && \
+    apt-get install libpq-dev --yes && \
+	apt install r-base --yes
 
-RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/'
+COPY ./install_apppacks.R /opt/app/install_apppacks.R
 
-RUN apt-get update --yes
+RUN Rscript /opt/app/install_apppacks.R
 
-RUN apt-get install libpq-dev --yes
+COPY ./launch_app.R /opt/app/launch_app.R
 
-RUN apt install r-base --yes
-
-COPY ./install_apppacks.R app/install_apppacks.R
-
-RUN Rscript app/install_apppacks.R
-
-RUN mkdir /opt/app
+EXPOSE 3838
 
 WORKDIR /opt/app
+
+CMD Rscript /opt/app/launch_app.R
+
 
 
 

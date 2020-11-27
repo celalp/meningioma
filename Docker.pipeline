@@ -23,5 +23,5 @@ RUN Rscript /opt/app/install_pipepacks.R
 
 WORKDIR /opt/app/
 
-ENTRYPOINT bash analysis/watcher.sh ../config.yaml
+CMD bash analysis/watcher.sh ../config.yaml
 
