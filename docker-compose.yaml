@@ -18,10 +18,21 @@ services:
       - ./db/log:/var/log/postgresql
     restart: unless-stopped
 
+  pipeline:
+    image: pipeline:latest
+    container_name: pipeline
+    networks: 
+      - webapp
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/opt/app
+    restart: unless-stopped
+
   shinyproxy:
     image: adoptopenjdk:8-jre-openj9
     container_name: shinyproxy
-    links: 
+    depends_on: 
       - postgres
     ports:
       - "8080:8080"
@@ -29,30 +40,16 @@ services:
       - webapp
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./shinyproxy:/opt/shinyproxy
-    working_dir: /opt/shinyproxy
+      - ./:/opt/app/
+    working_dir: /opt/app/shinyproxy
     command: java -jar shinyproxy-2.4.1.jar
-    restart: unless-stopped
-
-  pipeline:
-    build: 
-      context: ./
-      dockerfile: Docker.pipeline
-    container_name: pipeline
-    image: pipeline:latest
-    networks: 
-      - webapp
-    depends_on:
-      - postgres
-    volumes:
-      - .:/opt/app
     restart: unless-stopped
 
 networks:
   webapp:
-
+    name: webapp
 
 volumes:
   postgres:
-  shinyproxy:
   pipeline:
+  shinyproxy:
