@@ -34,7 +34,7 @@ for(module in modules){
 
 server<-function(input, output, session){
   #database connection making it a global variable
-  conn<<-dbConnect(drv = PostgreSQL(), parameters$database$host, 
+  conn<<-dbConnect(drv = PostgreSQL(), host=parameters$database$host, 
                   user=parameters$database$username, 
                   password=parameters$database$password, 
                   dbname=parameters$database$name, 

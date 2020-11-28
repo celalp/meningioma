@@ -47,7 +47,8 @@ services:
 
 networks:
   webapp:
-    name: webapp
+    external: 
+      name: webapp
 
 volumes:
   postgres:

@@ -7,3 +7,5 @@ db/data/
 db/log/
 files/
 analysis_logs/
+images/
+.dockerignore

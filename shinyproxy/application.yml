@@ -20,6 +20,4 @@ logging:
   file:
     shinyproxy.log
 
-server:
-  servlet:
-    context-path:  /opt/app
+
