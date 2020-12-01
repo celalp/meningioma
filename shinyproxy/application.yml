@@ -1,7 +1,7 @@
 proxy:
   title: METHYLATION APP
-  landing-page: /app/webapp
-  heartbeat-rate: 60000
+  landing-page: /app_direct/webapp
+  heartbeat-rate: 10000
   heartbeat-timeout: 1800000
   port: 8080
   authentication: none
@@ -15,8 +15,7 @@ proxy:
     description: Shiny web application for Zadeh lab
     container-image: methylation-shiny:latest
     container-network: methylation-main
-    #container-volumes: ["/home/alper/Documents/packages/webapp/meningioma/:/opt/app"]
-    #container-cmd: ["Rscript", "/opt/app/launch_app.R"]
+    container-volumes: ["methylation-uploads:/srv/shiny-server/files"]
 logging:
   file:
     logs/shinyproxy.log

@@ -11,7 +11,7 @@ database:
   password: 27603e12416d8d5af5862e3ed4ce890d
   host: postgres #needs to be postgres if using docker-compose
   port: 5432
-sample_files: ../files/
+sample_files: files/
 encryption:
   algorithm: sha512 #lowercase these are function names in R
 email:
@@ -27,7 +27,7 @@ app_files:
 analysis:
   pipeline: analysis_pipeline.R
   rmd: sample_report.Rmd
-  logs: analysis_logs
+  logs: logs
   extrasample: extrasample
   externaldata: externaldata
 

@@ -13,7 +13,7 @@ services:
     ports:
       - "${POSTGRES_HOST_PORT}:5432"
     networks:
-      - main`
+      - main
     restart: unless-stopped
   executor:
     build:
@@ -25,6 +25,9 @@ services:
       - postgres
     networks:
       - main
+    volumes:
+      - ./analysis/logs:/opt/app/logs
+      - methylation-uploads:/opt/app/files
     restart: unless-stopped
   shinyproxy:
     build:
@@ -41,6 +44,7 @@ services:
       - main
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
       - ./shinyproxy/logs:/opt/shinyproxy/logs
     restart: unless-stopped
   nginx:
@@ -56,6 +60,10 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/certs:/etc/nginx/certs
 #     - ./nginx/logs:/var/log/nginx
+    restart: unless-stopped
 networks:
   main:
     name: methylation-main
+volumes:
+  uploads:
+    name: methylation-uploads

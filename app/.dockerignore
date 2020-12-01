@@ -1,0 +1,4 @@
+files/
+logs/
+docker-compose.yaml
+Dockerfile

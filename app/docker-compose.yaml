@@ -14,5 +14,5 @@ services:
       - main
 
 networks:
- main:
-   name: methylation-main
+  main:
+    name: methylation-main
