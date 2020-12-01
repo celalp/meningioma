@@ -10,20 +10,21 @@ services:
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
       - ./db/data:/var/lib/postgresql/data
-      - ./db/log:/var/log/postgresql
     ports:
       - "${POSTGRES_HOST_PORT}:5432"
     networks:
-      - main
+      - main`
     restart: unless-stopped
-  pipeline:
-    image: pipeline:latest
-    networks:
-      - main
+  executor:
+    build:
+      context: analysis
+      args:
+        BIOCONDUCTOR_VERSION: "${BIOCONDUCTOR_VERSION}"
+    image: methylation-executor
     depends_on:
       - postgres
-    volumes:
-      - ./:/opt/app
+    networks:
+      - main
     restart: unless-stopped
   shinyproxy:
     build:

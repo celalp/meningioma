@@ -16,7 +16,6 @@ The application is now available at localhost.
 Shiny: read Postgres variables from environment variables
 Shiny: prune unused contents from `config.yaml`
 Pipeline: read Postgres variables from environment variables
-Pipeline: read local `config.yaml` or similar
 Pipeline: clean up configuration
 Shinyproxy: investigate logging issue with 2.4.x
 Shinyproxy: volume storage
