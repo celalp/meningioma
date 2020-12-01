@@ -29,7 +29,7 @@ EXPOSE 3838
 
 WORKDIR /opt/app
 
-CMD Rscript /opt/app/launch_app.R
+
 
 
 

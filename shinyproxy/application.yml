@@ -1,6 +1,6 @@
 proxy:
   title: METHYLATION APP
-  landing-page: /
+  landing-page: /app/webapp
   heartbeat-rate: 10000
   heartbeat-timeout: 60000
   port: 8080
@@ -15,9 +15,9 @@ proxy:
     container-image: app:latest
     container-network: webapp
     container-volumes: ["/home/alper/Documents/packages/webapp/meningioma/:/opt/app"]
+    container-cmd: ["Rscript", "/opt/app/launch_app.R"]
 
 logging:
   file:
-    shinyproxy.log
-
+    /opt/app/shinyproxy/shinyproxy.log
 

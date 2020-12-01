@@ -15,6 +15,7 @@ RUN apt-get update --yes && \
     add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/' && \
     apt-get install libpq-dev --yes && \
     apt-get update --yes && \
+    apt-get install -y pandoc && \
     apt install r-base --yes
 
 COPY ./install_pipepacks.R /opt/app/install_pipepacks.R
