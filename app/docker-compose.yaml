@@ -2,17 +2,20 @@ version: "3.8"
 
 services:
   shiny:
-    image: methylation-shiny
     build: .
+    image: methylation-shiny
     ports:
       - "3838:3838"
     user: shiny
-    # volumes:
+    volumes:
+      - uploads:/srv/shiny-server/files
     #  - .:/srv/shiny-server
     #  - ./log:/var/log/shiny-server
     networks:
       - main
-
 networks:
   main:
     name: methylation-main
+volumes:
+  uploads:
+    name: methylation-uploads

@@ -18,6 +18,7 @@ Shiny: read Postgres variables from environment variables
 Shiny: prune unused contents from `config.yaml`
 Pipeline: read Postgres variables from environment variables
 Pipeline: clean up configuration
+Shiny: fix upload_sample:132 tryCatch to not die if directory creation fails (it doesn't for login)
 
 Shinyproxy: investigate logging issue with 2.4.x
 Postgres: log bind mount not doing anything

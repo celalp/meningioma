@@ -6,6 +6,7 @@ WORKDIR /srv/shiny-server
 COPY install.R .
 RUN Rscript install.R
 COPY . .
+RUN mkdir -p files && chown shiny:shiny files
 # VOLUME ["files"]
 # The latest Shiny server images require this to avoid
 # starting the s6 supervisor as non-root
