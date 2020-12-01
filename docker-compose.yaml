@@ -3,24 +3,24 @@ version: "3.8"
 services:
   postgres:
     image: postgres:alpine
-    environment: # make this an env file
-      - POSTGRES_PASSWORD=27603e12416d8d5af5862e3ed4ce890d
-      - POSTGRES_USER=methylation
-      - POSTGRES_DB=methylation
-    ports:
-      - "5432:5432"
-    networks:
-      - webapp
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d
       - ./db/data:/var/lib/postgresql/data
       - ./db/log:/var/log/postgresql
+    ports:
+      - "${POSTGRES_HOST_PORT}:5432"
+    networks:
+      - main
     restart: unless-stopped
 
   pipeline:
     image: pipeline:latest
     networks:
-      - webapp
+      - main
     depends_on:
       - postgres
     volumes:
@@ -28,18 +28,22 @@ services:
     restart: unless-stopped
 
   shinyproxy:
-    build: shinyproxy
-    image: methylation-shinyproxy
+    build:
+      context: shinyproxy
+      args:
+        JDK_VERSION: "${JDK_VERSION}"
+        SHINYPROXY_VERSION: "${SHINYPROXY_VERSION}"
+    image: "methylation-shinyproxy:${SHINYPROXY_VERSION}_${JDK_VERSION}"
     depends_on:
       - postgres
     ports:
       - "8080:8080"
     networks:
-      - webapp
+      - main
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
 networks:
-  webapp:
-    name: webapp
+  main:
+    name: methylation-main

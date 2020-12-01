@@ -1,3 +1,4 @@
+.Rhistory
 .Rproj.user
 secrets.yaml
 db/data/
@@ -5,6 +6,7 @@ db/log/
 files/
 analysis_logs/
 images/
-.dockerignore
 analysis/externaldata
 analysis/extrasample
+.env
+shinyproxy/logs
