@@ -8,16 +8,20 @@ proxy:
   hide-navbar: true
   docker:
     internal-networking: true
+  container-log-path: logs
   specs:
   - id: webapp
     display-name: Methylation Webapp
     description: Shiny web application for Zadeh lab
     container-image: methylation-shiny:latest
-    container-network: webapp
+    container-network: methylation-main
     #container-volumes: ["/home/alper/Documents/packages/webapp/meningioma/:/opt/app"]
     #container-cmd: ["Rscript", "/opt/app/launch_app.R"]
-
 logging:
   file:
-    shinyproxy.log
-
+    logs/shinyproxy.log
+spring:
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
