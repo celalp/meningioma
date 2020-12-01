@@ -3,7 +3,6 @@ version: "3.8"
 services:
   postgres:
     image: postgres:alpine
-    container_name: postgres
     environment: # make this an env file
       - POSTGRES_PASSWORD=27603e12416d8d5af5862e3ed4ce890d
       - POSTGRES_USER=methylation
@@ -20,8 +19,7 @@ services:
 
   pipeline:
     image: pipeline:latest
-    container_name: pipeline
-    networks: 
+    networks:
       - webapp
     depends_on:
       - postgres
@@ -30,9 +28,9 @@ services:
     restart: unless-stopped
 
   shinyproxy:
-    image: adoptopenjdk:8-jre-openj9
-    container_name: shinyproxy
-    depends_on: 
+    build: shinyproxy
+    image: methylation-shinyproxy
+    depends_on:
       - postgres
     ports:
       - "8080:8080"
@@ -40,17 +38,8 @@ services:
       - webapp
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./:/opt/app/
-    working_dir: /opt/app/shinyproxy
-    command: java -jar shinyproxy-2.4.1.jar
     restart: unless-stopped
 
 networks:
   webapp:
-    external: 
-      name: webapp
-
-volumes:
-  postgres:
-  pipeline:
-  shinyproxy:
+    name: webapp
