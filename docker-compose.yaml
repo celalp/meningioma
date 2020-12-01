@@ -16,7 +16,6 @@ services:
     networks:
       - main
     restart: unless-stopped
-
   pipeline:
     image: pipeline:latest
     networks:
@@ -26,7 +25,6 @@ services:
     volumes:
       - ./:/opt/app
     restart: unless-stopped
-
   shinyproxy:
     build:
       context: shinyproxy
@@ -37,14 +35,26 @@ services:
     depends_on:
       - postgres
     ports:
-      - "8080:8080"
+      - "${SHINYPROXY_HOST_PORT}:8080"
     networks:
       - main
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./shinyproxy/logs:/opt/shinyproxy/logs
     restart: unless-stopped
-
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - shinyproxy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - main
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/certs
+#     - ./nginx/logs:/var/log/nginx
 networks:
   main:
     name: methylation-main

@@ -10,3 +10,4 @@ analysis/externaldata
 analysis/extrasample
 .env
 shinyproxy/logs
+nginx/certs
