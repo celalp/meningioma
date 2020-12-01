@@ -4,12 +4,10 @@ Copy `sample.env` to `.env` and change the credentials.
 Create `nginx/certs` and add your `public.crt` and `private.key`.
 
 ```bash
-cd app
-docker-compose build
-cd ..
 docker-compose up
 ```
-The application is now available at localhost.
+This will take quite a bit of time on first run to pull gigabytes of dependencies to build the
+container images, after which the application will be available at localhost.
 
 
 ## TODO

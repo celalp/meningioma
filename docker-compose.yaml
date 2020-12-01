@@ -29,6 +29,16 @@ services:
       - ./analysis/logs:/opt/app/logs
       - uploads:/opt/app/files
     restart: unless-stopped
+  shiny-build:
+    build: app
+    image: methylation-shiny
+    user: shiny
+    command: echo
+    volumes:
+      - uploads:/srv/shiny-server/files
+    networks:
+      - main
+    restart: "no"
   shinyproxy:
     build:
       context: shinyproxy
@@ -38,6 +48,7 @@ services:
     image: "methylation-shinyproxy:${SHINYPROXY_VERSION}_${JDK_VERSION}"
     depends_on:
       - postgres
+      - shiny-build
     ports:
       - "${SHINYPROXY_HOST_PORT}:8080"
     networks:

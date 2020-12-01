@@ -10,7 +10,6 @@ services:
     volumes:
       - uploads:/srv/shiny-server/files
     #  - .:/srv/shiny-server
-    #  - ./log:/var/log/shiny-server
     networks:
       - main
 networks:
