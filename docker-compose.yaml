@@ -27,7 +27,7 @@ services:
       - main
     volumes:
       - ./analysis/logs:/opt/app/logs
-      - methylation-uploads:/opt/app/files
+      - uploads:/opt/app/files
     restart: unless-stopped
   shinyproxy:
     build:

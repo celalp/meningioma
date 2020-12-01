@@ -10,6 +10,6 @@ COPY install.R .
 RUN Rscript install.R
 COPY . .
 
-VOLUME ["analysis_logs", "files"]
+# VOLUME ["analysis_logs", "files"]
 CMD ["Rscript", "analysis_pipeline.R",  "-y", "config.yaml"]
 

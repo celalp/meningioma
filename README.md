@@ -13,11 +13,12 @@ The application is now available at localhost.
 
 
 ## TODO
+R side:
 Shiny: read Postgres variables from environment variables
 Shiny: prune unused contents from `config.yaml`
 Pipeline: read Postgres variables from environment variables
 Pipeline: clean up configuration
+
 Shinyproxy: investigate logging issue with 2.4.x
-Shinyproxy: volume storage
 Postgres: log bind mount not doing anything
 Shiny: independent Docker Compose mounts

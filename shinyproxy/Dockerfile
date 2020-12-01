@@ -6,5 +6,5 @@ WORKDIR /opt/shinyproxy
 RUN curl -o shinyproxy.jar https://www.shinyproxy.io/downloads/shinyproxy-${SHINYPROXY_VERSION}.jar
 
 COPY application.yml .
-VOLUME ["logs"]
+# VOLUME ["logs"]
 CMD ["java", "-jar", "shinyproxy.jar"]
