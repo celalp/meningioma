@@ -1,13 +1,13 @@
+.env
 .Rhistory
 .Rproj.user
 secrets.yaml
 db/data/
 db/log/
 files/
-analysis_logs/
 images/
 analysis/externaldata
 analysis/extrasample
-.env
+analysis/logs
 shinyproxy/logs
 nginx/certs

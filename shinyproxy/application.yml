@@ -15,7 +15,7 @@ proxy:
     description: Shiny web application for Zadeh lab
     container-image: methylation-shiny:latest
     container-network: methylation-main
-    container-volumes: ["methylation-uploads:/srv/shiny-server/files"]
+    container-volumes: ["methylation-uploads:/opt/app/files"]
 logging:
   file:
     logs/shinyproxy.log
