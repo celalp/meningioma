@@ -1,6 +1,7 @@
 .env
 .Rhistory
 .Rproj.user
+.DS_Store
 secrets.yaml
 db/data/
 db/log/
