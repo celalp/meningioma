@@ -6,10 +6,9 @@ services:
     image: methylation-shiny
     ports:
       - "3838:3838"
-    user: shiny
     volumes:
-      - uploads:/srv/shiny-server/files
-    #  - .:/srv/shiny-server
+      - uploads:/opt/app/files
+    #  - .:/opt/app
     networks:
       - main
 networks:

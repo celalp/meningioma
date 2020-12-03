@@ -1,13 +1,12 @@
-FROM rocker/shiny:latest
+ARG R_VERSION=latest
+FROM rocker/r-ver:${R_VERSION}
 RUN apt update -y && \
     apt install -y libpq-dev libssl-dev && \
     rm -rf /var/lib/apt/lists/*
-WORKDIR /srv/shiny-server
+WORKDIR /opt/app
 COPY install.R .
 RUN Rscript install.R
 COPY . .
-RUN mkdir -p files && chown shiny:shiny files
 # VOLUME ["files"]
-# The latest Shiny server images require this to avoid
-# starting the s6 supervisor as non-root
-CMD ["/usr/bin/shiny-server"]
+EXPOSE 3838
+CMD ["R", "-e", "shiny::runApp(host='0.0.0.0', port=3838)"]

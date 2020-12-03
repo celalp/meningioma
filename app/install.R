@@ -1,8 +1,5 @@
 #!/usr/bin/env Rscript
 
-# Already in rocker/shiny base image
-# install.packages(c("shiny", "rmarkdown", "yaml"))
-
 withCallingHandlers(
   install.packages(c(
     "bsplus",
@@ -10,14 +7,17 @@ withCallingHandlers(
     "DT",
     "openssl",
     "reshape2",
+    "rmarkdown",
     "RPostgreSQL",
+    "shiny",
     "shinycssloaders",
     "shinydashboard",
     "shinydashboardPlus",
     "shinyBS",
     "shinyjs",
     "shinythemes",
-    "shinyWidgets"
+    "shinyWidgets",
+    "yaml"
   )),
   warning=stop
 )

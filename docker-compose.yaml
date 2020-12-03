@@ -32,10 +32,9 @@ services:
   shiny-build:
     build: app
     image: methylation-shiny
-    user: shiny
     command: echo
     volumes:
-      - uploads:/srv/shiny-server/files
+      - uploads:/opt/app/files
     networks:
       - main
     restart: "no"
