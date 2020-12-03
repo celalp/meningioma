@@ -26,6 +26,8 @@ services:
     networks:
       - main
     volumes:
+      - ./analysis/externaldata:/opt/app/externaldata
+      - ./analysis/extrasample:/opt/app/extrasample
       - ./analysis/logs:/opt/app/logs
       - uploads:/opt/app/files
     restart: unless-stopped
