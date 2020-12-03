@@ -16,10 +16,7 @@ services:
       - main
     restart: unless-stopped
   executor:
-    build:
-      context: analysis
-      args:
-        BIOCONDUCTOR_VERSION: "${BIOCONDUCTOR_VERSION}"
+    build: analysis
     image: methylation-executor
     depends_on:
       - postgres

@@ -1,9 +1,10 @@
 #!/usr/bin/env Rscript
+
 # Already in bioconductor/bioconductor_docker
 # install.packages(c("BiocManager", "devtools", "dplyr", "knitr", "yaml"), repos="https://cloud.r-project.org")
 
-# library(BiocManager)
-# library(devtools)
+# Already in rocker/verse
+# "BiocManager", "DBI", "devtools", "dplyr", "knitr", "RColorBrewer", "rmarkdown", "yaml"
 
 withCallingHandlers(
   BiocManager::install(c(
@@ -11,7 +12,6 @@ withCallingHandlers(
     "caret",
     "conumee",
     "CopyNeutralIMA",
-  	"DBI",
     "gbm",
     "genefilter",
     "gplots",
@@ -20,8 +20,6 @@ withCallingHandlers(
     "minfi",
     "minfiData",
     "R.filesets",
-    "RColorBrewer",
-    "rmarkdown",
     "RPostgreSQL"
   )),
   warning=stop
@@ -31,6 +29,6 @@ withCallingHandlers(
   warning=stop
 )
 withCallingHandlers(
-  devtools::install_version("hdnom", version="5.0", repos="http://cran.us.r-project.org"),
+  devtools::install_version("hdnom", version="5.0"),
   warning=stop
 )

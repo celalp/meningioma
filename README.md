@@ -33,4 +33,4 @@ R side:
 Docker:
 - Shinyproxy: investigate logging issue with 2.4.x
 - Postgres: log bind mount not doing anything
-- Shiny: independent Docker Compose mounts
+- If using rocker/verse, use R_VERSION in .env and docker-compose

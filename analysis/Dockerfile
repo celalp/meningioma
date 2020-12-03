@@ -1,5 +1,5 @@
-ARG BIOCONDUCTOR_VERSION=latest
-FROM bioconductor/bioconductor_docker:${BIOCONDUCTOR_VERSION}
+ARG R_VERSION=latest
+FROM rocker/verse:${R_VERSION}
 
 RUN apt update -y && \
     apt install -y libpq-dev pandoc && \
@@ -10,6 +10,6 @@ COPY install.R .
 RUN Rscript install.R
 COPY . .
 
-# VOLUME ["analysis_logs", "files"]
+# VOLUME ["externaldata", "extrasample", "files", "logs"]
 CMD ["Rscript", "analysis_pipeline.R",  "-y", "config.yaml"]
 
