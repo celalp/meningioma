@@ -3,6 +3,7 @@ version: "3.8"
 services:
   postgres:
     image: postgres:alpine
+    user: postgres
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -26,14 +27,14 @@ services:
       - ./analysis/externaldata:/opt/app/externaldata
       - ./analysis/extrasample:/opt/app/extrasample
       - ./analysis/logs:/opt/app/logs
-      - uploads:/opt/app/files
+      - "./files:/opt/app/files"
     restart: unless-stopped
   shiny-build:
     build: app
     image: methylation-shiny
     command: echo
     volumes:
-      - uploads:/opt/app/files
+      - "./files:/opt/app/files"
     networks:
       - main
     restart: "no"
@@ -44,6 +45,8 @@ services:
         JDK_VERSION: "${JDK_VERSION}"
         SHINYPROXY_VERSION: "${SHINYPROXY_VERSION}"
     image: "methylation-shinyproxy:${SHINYPROXY_VERSION}_${JDK_VERSION}"
+    environment:
+      SHINY_UPLOAD_VOLUME: "${PWD}/files"
     depends_on:
       - postgres
       - shiny-build
@@ -73,6 +76,3 @@ services:
 networks:
   main:
     name: methylation-main
-volumes:
-  uploads:
-    name: methylation-uploads

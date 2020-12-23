@@ -7,13 +7,10 @@ services:
     ports:
       - "3838:3838"
     volumes:
-      - uploads:/opt/app/files
+      - "../files:/opt/app/files"
     #  - .:/opt/app
     networks:
       - main
 networks:
   main:
     name: methylation-main
-volumes:
-  uploads:
-    name: methylation-uploads
