@@ -14,12 +14,12 @@ parameters<-yaml.load_file(args$yaml)
 envs<-Sys.getenv()
 
 # connect to db
-conn<-dbConnect(drv = PostgreSQL(), envs["POSTGRES_HOST"], 
+conn<-dbConnect(drv = PostgreSQL(), envs["POSTGRES_HOST"],
               user=as.character(envs["POSTGRES_USER"]),
               password=as.character(envs["POSTGRES_PASSWORD"]),
               dbname=as.character(envs["POSTGRES_DB"]),
-              port=as.character(envs["POSTGRES_HOST_PORT"]))
-  
+              port=as.character(envs["POSTGRES_PORT"]))
+
 
 dbSendStatement(conn, "SET search_path = samples_users;")
 

@@ -22,6 +22,12 @@ services:
       args:
         R_VERSION: "${R_VERSION}"
     image: methylation-executor
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
     depends_on:
       - postgres
     networks:
@@ -32,12 +38,6 @@ services:
       - ./analysis/logs:/opt/app/logs
       - "./files:/opt/app/files"
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_HOST_PORT: "${POSTGRES_HOST_PORT}"
-      POSTGRES_HOST: postgres
 
   shiny-build:
     build:
@@ -45,18 +45,18 @@ services:
       args:
         R_VERSION: "${R_VERSION}"
     image: methylation-shiny
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
     command: echo
     networks:
       - main
     volumes:
       - "./files:/opt/app/files"
     restart: "no"
-    environment:
-      POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_HOST_PORT: "${POSTGRES_HOST_PORT}"
-      POSTGRES_HOST: postgres
 
   shinyproxy:
     build:
@@ -67,6 +67,11 @@ services:
     image: "methylation-shinyproxy:${SHINYPROXY_VERSION}_${JDK_VERSION}"
     environment:
       SHINY_UPLOAD_VOLUME: "${PWD}/files"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
     depends_on:
       - postgres
       - shiny-build
@@ -80,20 +85,20 @@ services:
       - ./shinyproxy/logs:/opt/shinyproxy/logs
     restart: unless-stopped
 
-  #nginx:
-  #  image: nginx:alpine
-  #  depends_on:
-  #    - shinyproxy
-  #  ports:
-  #    - "80:80"
-  #    - "443:443"
-  #  networks:
-  #    - main
-  #  volumes:
-  #    - ./nginx/conf.d:/etc/nginx/conf.d
-  #    - ./nginx/certs:/etc/nginx/certs
-#     - ./nginx/logs:/var/log/nginx
-  #  restart: unless-stopped
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - shinyproxy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - main
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/certs
+      #- ./nginx/logs:/var/log/nginx
+    restart: unless-stopped
 
 networks:
   main:

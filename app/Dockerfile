@@ -6,8 +6,6 @@ RUN apt update -y && \
 WORKDIR /opt/app
 COPY install.R .
 RUN Rscript install.R
-
-RUN ls
 COPY . .
 # VOLUME ["files"]
 EXPOSE 3838

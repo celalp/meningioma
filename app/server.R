@@ -40,20 +40,20 @@ server<-function(input, output, session){
   envs<-Sys.getenv()
 
 # connect to db
-  #conn<<-dbConnect(drv = PostgreSQL(), envs["POSTGRES_HOST"], 
+  #conn<<-dbConnect(drv = PostgreSQL(), envs["POSTGRES_HOST"],
   #            user=as.character(envs["POSTGRES_USER"]),
   #            password=as.character(envs["POSTGRES_PASSWORD"]),
   #            dbname=as.character(envs["POSTGRES_DB"]),
   #            port=as.integer(envs["POSTGRES_HOST_PORT"]))
 
-  conn<<-dbConnect(drv = PostgreSQL(), host=parameters$database$host, 
-                  user=parameters$database$username, 
-                  password=parameters$database$password, 
-                  dbname=parameters$database$name, 
-                  port=parameters$database$port)
-  
+  conn<<-dbConnect(drv = PostgreSQL(), envs["POSTGRES_HOST"],
+              user=as.character(envs["POSTGRES_USER"]),
+              password=as.character(envs["POSTGRES_PASSWORD"]),
+              dbname=as.character(envs["POSTGRES_DB"]),
+              port=as.character(envs["POSTGRES_PORT"]))
+
   dbSendStatement(conn, "SET search_path = samples_users;")
-  
+
   #Keeping track of tabs for browser history
   justUpdated <- reactiveVal(FALSE)
   observeEvent(getQueryString()[["tab"]],{
@@ -65,7 +65,7 @@ server<-function(input, output, session){
       justUpdated(TRUE)
     }
   })
-  
+
   observeEvent(input$tabs,{
     if (justUpdated()) {
       justUpdated(FALSE)
@@ -73,16 +73,16 @@ server<-function(input, output, session){
     }
     updateQueryString(paste0("?tab=",input$tabs), mode = "push")
   })
-  
+
   user_login_info<-reactiveValues(userid=NULL, username=NULL, admin=F, login=F)
-  
+
   #if everyything is null then return the login screen by defaul
   user_login_info<-callModule(login_server, id="login_screen", parameters=parameters, user=user_login_info)
   #if user_status()$login is true and the user is not admin below will display otherwise will be null
   callModule(user_server, id="user_screen", parameters=parameters, user=user_login_info)
-  #if user_status()$login is true and the user is admin below will display otherwise will be null  
+  #if user_status()$login is true and the user is admin below will display otherwise will be null
   #callModule(module = admin_server, id="admin_screen", conn=conn, status=user_status)
-  
+
   #TODO errorcheck
   session$onSessionEnded(
     function(){
@@ -90,5 +90,5 @@ server<-function(input, output, session){
       #dbWriteTable(conn, "access", access, append=T, row.names=F)
       dbDisconnect(conn = conn)
     }
-  )  
+  )
 }
