@@ -3,11 +3,18 @@ FROM rocker/verse:${R_VERSION}
 
 RUN apt update -y && \
     apt install -y libpq-dev pandoc && \
+    apt install texlive-base --yes && \
+    apt install texlive-binaries --yes && \
+    apt install texlive-latex-recommended --yes && \
+    apt install texlive-pictures --yes && \
+    apt install texlive-latex-extra --yes && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/app
 COPY install.R .
 RUN Rscript install.R
+
+
 COPY . .
 
 # VOLUME ["externaldata", "extrasample", "files", "logs"]

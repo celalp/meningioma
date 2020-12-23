@@ -11,12 +11,15 @@ parser$add_argument('-y', '--yaml', action='store', help='config yaml file')
 args<-parser$parse_args()
 parameters<-yaml.load_file(args$yaml)
 
+envs<-Sys.getenv()
+
 # connect to db
-conn<-dbConnect(drv = PostgreSQL(), parameters$database$host,
-                user=parameters$database$username,
-                password=parameters$database$password,
-                dbname=parameters$database$name,
-                port=parameters$database$port)
+conn<-dbConnect(drv = PostgreSQL(), envs["POSTGRES_HOST"], 
+              user=as.character(envs["POSTGRES_USER"]),
+              password=as.character(envs["POSTGRES_PASSWORD"]),
+              dbname=as.character(envs["POSTGRES_DB"]),
+              port=as.character(envs["POSTGRES_HOST_PORT"]))
+  
 
 dbSendStatement(conn, "SET search_path = samples_users;")
 
