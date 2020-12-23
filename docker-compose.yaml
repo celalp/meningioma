@@ -7,17 +7,20 @@ services:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-    volumes:
-      - ./db/init:/docker-entrypoint-initdb.d
-      - ./db/data:/var/lib/postgresql/data
     ports:
       - "${POSTGRES_HOST_PORT}:5432"
     networks:
       - main
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/postgresql/data
     restart: unless-stopped
 
   executor:
-    build: analysis
+    build:
+      context: analysis
+      args:
+        R_VERSION: "${R_VERSION}"
     image: methylation-executor
     depends_on:
       - postgres
@@ -37,13 +40,16 @@ services:
       POSTGRES_HOST: postgres
 
   shiny-build:
-    build: app
+    build:
+      context: app
+      args:
+        R_VERSION: "${R_VERSION}"
     image: methylation-shiny
     command: echo
-    volumes:
-      - "./files:/opt/app/files"
     networks:
       - main
+    volumes:
+      - "./files:/opt/app/files"
     restart: "no"
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
