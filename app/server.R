@@ -32,13 +32,26 @@ for(module in modules){
   source(module)
 }
 
+
+
 server<-function(input, output, session){
   #database connection making it a global variable
+
+  envs<-Sys.getenv()
+
+# connect to db
+  #conn<<-dbConnect(drv = PostgreSQL(), envs["POSTGRES_HOST"], 
+  #            user=as.character(envs["POSTGRES_USER"]),
+  #            password=as.character(envs["POSTGRES_PASSWORD"]),
+  #            dbname=as.character(envs["POSTGRES_DB"]),
+  #            port=as.integer(envs["POSTGRES_HOST_PORT"]))
+
   conn<<-dbConnect(drv = PostgreSQL(), host=parameters$database$host, 
                   user=parameters$database$username, 
                   password=parameters$database$password, 
                   dbname=parameters$database$name, 
                   port=parameters$database$port)
+  
   dbSendStatement(conn, "SET search_path = samples_users;")
   
   #Keeping track of tabs for browser history

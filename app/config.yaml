@@ -9,7 +9,7 @@ database:
   name: methylation
   username: methylation
   password: 27603e12416d8d5af5862e3ed4ce890d
-  host: postgres
+  host: postgres #needs to be postgres if using docker-compose
   port: 5432
 sample_files: files/
 encryption:
@@ -24,14 +24,3 @@ app_files:
     user: modules/user.R
     account_settings: modules/account_settings.R
     upload_sample: modules/upload_sample.R
-analysis:
-  pipeline: analysis_pipeline.R
-  rmd: sample_report.Rmd
-  logs: analysis_logs/
-  extrasample: data/extrasample
-  externaldata: data/externaldata
-  functions: functions.R
-backup:
-  script: backup.sh
-  frequency: 7
-

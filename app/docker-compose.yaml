@@ -11,6 +11,13 @@ services:
     #  - .:/opt/app
     networks:
       - main
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_HOST_PORT: "${POSTGRES_HOST_PORT}"
+      POSTGRES_HOST: postgres
+      
 networks:
   main:
     name: methylation-main
