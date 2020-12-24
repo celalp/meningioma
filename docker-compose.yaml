@@ -21,7 +21,7 @@ services:
       context: analysis
       args:
         R_VERSION: "${R_VERSION}"
-    image: methylation-executor
+    image: ghcr.io/kevinlul/methylation-executor
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -36,7 +36,7 @@ services:
       - ./analysis/externaldata:/opt/app/externaldata
       - ./analysis/extrasample:/opt/app/extrasample
       - ./analysis/logs:/opt/app/logs
-      - "./files:/opt/app/files"
+      - ./files:/opt/app/files
     restart: unless-stopped
 
   shiny-build:
@@ -44,7 +44,7 @@ services:
       context: app
       args:
         R_VERSION: "${R_VERSION}"
-    image: methylation-shiny
+    image: ghcr.io/kevinlul/methylation-shiny
     environment:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -55,7 +55,7 @@ services:
     networks:
       - main
     volumes:
-      - "./files:/opt/app/files"
+      - ./files:/opt/app/files
     restart: "no"
 
   shinyproxy:
@@ -64,7 +64,7 @@ services:
       args:
         JDK_VERSION: "${JDK_VERSION}"
         SHINYPROXY_VERSION: "${SHINYPROXY_VERSION}"
-    image: "methylation-shinyproxy:${SHINYPROXY_VERSION}_${JDK_VERSION}"
+    image: "ghcr.io/kevinlul/methylation-shinyproxy:${SHINYPROXY_VERSION}_${JDK_VERSION}"
     environment:
       SHINY_UPLOAD_VOLUME: "${PWD}/files"
       POSTGRES_DB: "${POSTGRES_DB}"
@@ -97,7 +97,7 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/certs:/etc/nginx/certs
-      #- ./nginx/logs:/var/log/nginx
+#      - ./nginx/logs:/var/log/nginx
     restart: unless-stopped
 
 networks:
