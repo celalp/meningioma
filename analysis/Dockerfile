@@ -2,13 +2,15 @@ ARG R_VERSION=latest
 FROM rocker/verse:${R_VERSION}
 
 RUN apt update -y && \
-    apt install -y libpq-dev pandoc && \
-    apt install texlive-base --yes && \
-    apt install texlive-binaries --yes && \
-    apt install texlive-latex-recommended --yes && \
-    apt install texlive-pictures --yes && \
-    apt install texlive-latex-extra --yes && \
-    rm -rf /var/lib/apt/lists/*
+    apt install -y \
+      libpq-dev \
+      pandoc \
+      texlive-base \
+      texlive-binaries \
+      texlive-latex-recommended \
+      texlive-pictures \
+      texlive-latex-extra \
+      && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/app
 COPY install.R .
