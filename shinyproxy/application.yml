@@ -13,7 +13,7 @@ proxy:
   - id: webapp
     display-name: Methylation Webapp
     description: Shiny web application for Zadeh lab
-    container-image: methylation-shiny:latest
+    container-image: ghcr.io/kevinlul/methylation-shiny:latest
     container-env:
       POSTGRES_DB: "${POSTGRES_DB}"
       POSTGRES_USER: "${POSTGRES_USER}"
