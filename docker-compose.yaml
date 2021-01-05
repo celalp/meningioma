@@ -33,8 +33,8 @@ services:
     networks:
       - main
     volumes:
-      - ./analysis/externaldata:/opt/app/externaldata
-      - ./analysis/extrasample:/opt/app/extrasample
+      #- ./analysis/externaldata:/opt/app/externaldata
+      #- ./analysis/extrasample:/opt/app/extrasample
       - ./analysis/logs:/opt/app/logs
       - ./files:/opt/app/files
     restart: unless-stopped
@@ -97,7 +97,7 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/certs:/etc/nginx/certs
-#      - ./nginx/logs:/var/log/nginx
+      - ./nginx/logs:/var/log/nginx
     restart: unless-stopped
 
 networks:
