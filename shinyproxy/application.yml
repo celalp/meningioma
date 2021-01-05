@@ -1,5 +1,6 @@
 proxy:
   title: METHYLATION APP
+  logo-url: https://www.uhn.ca/_catalogs/masterpage/UHN/img/icons/uhn-icon.png
   landing-page: /app_direct/webapp
   heartbeat-rate: 10000
   heartbeat-timeout: 1800000
