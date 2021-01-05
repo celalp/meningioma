@@ -49,10 +49,7 @@ while(T){
       status<-sqlInterpolate(conn, status, id=sample)
       dbSendStatement(conn, status)
 
-      prog_df<-data.frame(time=Sys.time(), message="Dependencies loaded successfully", status="Proceed",
-                          sampleid=sample)
-      dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)
-
+      
       message("loading packages")
 
       # Here we load the rest of the packages
@@ -69,6 +66,10 @@ while(T){
       suppressPackageStartupMessages(library(gbm))
       suppressPackageStartupMessages(library(hdnom))
       suppressPackageStartupMessages(library(rmarkdown))
+      
+      prog_df<-data.frame(time=Sys.time(), message="Dependencies loaded successfully", status="Proceed",
+                          sampleid=sample)
+      dbWriteTable(conn, "analysis", prog_df, append=T, row.names=F)
 
       message("loading external data")
 
@@ -170,7 +171,6 @@ while(T){
 
 
       detP <- detectionP(RGset)
-      #TODO warn if colMeans(detP) > 0.05 in the report
       qc_pval<-colMeans(detP)
       status<-"update samples_users.samples set detection_p=?detp where sampleid=?id"
       status<-sqlInterpolate(conn, status, id=sample, detp=qc_pval)

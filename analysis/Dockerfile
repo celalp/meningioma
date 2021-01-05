@@ -17,7 +17,10 @@ COPY install.R .
 RUN Rscript install.R
 
 
-COPY . .
+COPY  analysis_pipeline.R config.yaml header.png header.tex sample_report.Rmd ./
+
+ADD ./extrasample ./extrasample
+ADD ./externaldata ./externaldata
 
 # VOLUME ["externaldata", "extrasample", "files", "logs"]
 CMD ["Rscript", "analysis_pipeline.R",  "-y", "config.yaml"]
