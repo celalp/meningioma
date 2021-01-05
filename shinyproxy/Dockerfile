@@ -5,6 +5,6 @@ ARG SHINYPROXY_VERSION=2.3.1
 WORKDIR /opt/shinyproxy
 RUN curl -o shinyproxy.jar https://www.shinyproxy.io/downloads/shinyproxy-${SHINYPROXY_VERSION}.jar
 
-COPY application.yml .
+COPY application.yml uhn-icon.png ./
 # VOLUME ["logs"]
 CMD ["java", "-jar", "shinyproxy.jar"]
