@@ -3,7 +3,7 @@ title: ""
 output: 
   pdf_document:
     includes:
-      in_header: ../../../../app/www/static/header.tex
+      in_header: ../../../../header.tex
           
 ---
 
