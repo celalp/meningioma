@@ -112,7 +112,7 @@ while(T){
       } else if (array_type=="EPIC"){
         MsetCtrl <- readRDS(paste0(parameters$analysis$externaldata, "/", "EPIC_control.Rds"))
         library(IlluminaHumanMethylationEPICmanifest)
-        library("IlluminaHumanMethylationEPICanno.ilm10b4.hg19")
+        library(IlluminaHumanMethylationEPICanno.ilm10b4.hg19)
         load(file = paste0(parameters$analysis$extrasample, "/", "EPIC_1ExtraSample_RGset.RData"))
         prog_df<-data.frame(time=Sys.time(), message=paste("Array type", array_type), status="Proceed",
                             sampleid=sample)

@@ -20,7 +20,11 @@ withCallingHandlers(
     "minfi",
     "minfiData",
     "R.filesets",
-    "RPostgreSQL"
+    "RPostgreSQL",
+    "IlluminaHumanMethylation450kmanifest",
+    "IlluminaHumanMethylation450kanno.ilmn12.hg19",
+    "IlluminaHumanMethylationEPICmanifest",
+    "IlluminaHumanMethylationEPICanno.ilm10b4.hg19"
   )),
   warning=stop
 )
