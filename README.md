@@ -1,13 +1,37 @@
 # Methylation webapp
 
-Copy `sample.env` to `.env` and change the credentials.
-Create `nginx/certs` and add your `public.crt` and `private.key`.
+## Setup
+
+1. Copy `sample.env` to `.env` and change the database credentials. If using external proxy, remove `127.0.0.1:` from `SHINYPROXY_HOST_PORT`.
+1. If using internal nginx, create `nginx/certs` and add your `public.crt` and `private.key`.
+1. Add proprietary models in `analysis/externaldata` and `analysis/extrasample` directories.
 
 ```bash
 docker-compose up
 ```
 This will take quite a bit of time on first run to pull gigabytes of dependencies to build the
 container images, after which the application will be available at localhost.
+
+The images are also already on [GitHub Container Registry](https://docs.github.com/en/packages/guides/about-github-container-registry).
+To make use of these instead, you will need to enable "Improved container support" in the "Feature preview"
+menu item, accessible by clicking on your profile picture in the top-right of GitHub. Then, in your
+[Developer settings](https://github.com/settings/tokens), create a personal access token with access
+to `read:packages`.
+
+Login to registry on your command-line and paste in the generated token when prompted.
+
+```bash
+docker login -u GITHUB_USERNAME --password-stdin
+```
+
+After you get access to the three private images, you no longer need to build the images locally.
+
+```bash
+docker-compose pull
+docker-compose up
+```
+
+If not using internal nginx, you do `docker-compose up -d executor shinyproxy` and forward requests to port 8080.
 
 ## Architecture
 This deploys as several containers as described by Docker Compose. They are networked in the `methylation-main` Docker network and `.idat` files are persisted in the `./files` bind mount.
