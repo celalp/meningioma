@@ -6,6 +6,9 @@
 # Already in rocker/verse
 # "BiocManager", "DBI", "devtools", "dplyr", "knitr", "RColorBrewer", "rmarkdown", "yaml"
 
+
+options(timeout=5000)
+
 withCallingHandlers(
   BiocManager::install(c(
     "argparse",

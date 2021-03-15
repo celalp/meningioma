@@ -7,9 +7,7 @@ RUN apt update -y && \
       pandoc \
       texlive-base \
       texlive-binaries \
-      texlive-latex-recommended \
-      texlive-pictures \
-      texlive-latex-extra \
+      texlive-full \
       && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/app
