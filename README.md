@@ -2,7 +2,7 @@
 
 ## Setup
 
-1. Copy `sample.env` to `.env` and change the database credentials. If using external proxy, remove `127.0.0.1:` from `SHINYPROXY_HOST_PORT`.
+1. Copy `sample.env` to `.env` and change the database credentials and admin contact email. If using external proxy, remove `127.0.0.1:` from `SHINYPROXY_HOST_PORT`.
 1. If using internal nginx, create `nginx/certs` and add your `public.crt` and `private.key`.
 1. Add proprietary models in `analysis/externaldata` and `analysis/extrasample` directories.
 
@@ -46,14 +46,3 @@ A Shinyproxy 2.3.1 image is built from `./shinyproxy` and OpenJDK 11. It is resp
 
 Finally, an nginx container acts as a reverse proxy to Shinyproxy and takes care of HTTPS. It mounts TLS certificates from `./nginx/certs`.
 
-## TODO
-R side:
-- Shiny: read Postgres variables from environment variables
-- Shiny: prune unused contents from `config.yaml`
-- Pipeline: read Postgres variables from environment variables
-- Pipeline: clean up configuration
-- Shiny: fix upload_sample:132 tryCatch to not die if directory creation fails (it doesn't for login)
-
-Docker:
-- Shinyproxy: investigate logging issue with 2.4.x
-- Postgres: log bind mount not doing anything
