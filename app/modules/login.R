@@ -141,8 +141,8 @@ login_server<-function(input, output, session, parameters, user){
           }, error=function(e){
             closeAlert(session, "login_alert_control")
             createAlert(session, "login_alert", "login_alert_control", title = "", 
-                        content = "We are having issues creating your home folder please try again later 
-                        if the problem persists please contact admin", style = "warning")
+                        content = paste("We are having issues creating your home folder please try again later 
+                        if the problem persists please contact",  parameters$email$address), style = "warning")
             access<-data.frame(time=Sys.time(), username=input$login_username, action="activate", status="fail")
             dbWriteTable(conn, "access", access, append=T, row.names=F)
           })
@@ -159,7 +159,7 @@ login_server<-function(input, output, session, parameters, user){
       } else {
         closeAlert(session, "login_alert_control")
         createAlert(session, "login_alert", "login_alert_control", title = "", 
-                    content = "There is an error with your account please contact admin", style = "danger")
+                    content = paste("There is an error with your account please contact", parameters$email$address), style = "danger")
         access<-data.frame(time=Sys.time(), username=input$login_username, action="login", status="fail/system")
         dbWriteTable(conn, "access", access, append=T, row.names=F)
       }
@@ -217,8 +217,8 @@ login_server<-function(input, output, session, parameters, user){
           }, error=function(e) {
             closeAlert(session, "forgot_password_alert_control")
             createAlert(session, "forgot_password_alert", "forgot_password_alert_control", title="", 
-                        content="We currently cannot access your records please try again later
-                      if the problem persists please contact admin", style = "danger")
+                        content=paste("We currently cannot access your records please try again later
+                      if the problem persists please contact", parameters$email$address), style = "danger")
             access<-data.frame(time=Sys.time(), username=input$forgot_username, action="password_reset", status="fail")
             dbWriteTable(conn, "access", access, append=T, row.names=F)
           })
@@ -290,8 +290,8 @@ login_server<-function(input, output, session, parameters, user){
         status<-"fail"
         closeAlert(session, "signup_alert_control")
         createAlert(session, "signup_alert", "signup_alert_control", title="", 
-                    content="There was an error in creating your account please check the signup form for 
-                    any errors if the problem persists you can contact admin", style = "danger")
+                    content=paste("There was an error in creating your account please check the signup form for 
+                    any errors if the problem persists you can contact", parameters$email$address), style = "danger")
       }, finally= {
         access<-data.frame(time=Sys.time(), username=input$signup_username, action="signup", status=status)
         dbWriteTable(conn, "access", access, append=T, row.names=F)

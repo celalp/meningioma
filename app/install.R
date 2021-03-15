@@ -2,6 +2,7 @@
 
 withCallingHandlers(
   install.packages(c(
+    "devtools",
     "bsplus",
     "DBI",
     "DT",
@@ -12,7 +13,6 @@ withCallingHandlers(
     "shiny",
     "shinycssloaders",
     "shinydashboard",
-    "shinydashboardPlus",
     "shinyBS",
     "shinyjs",
     "shinythemes",
@@ -21,3 +21,9 @@ withCallingHandlers(
   )),
   warning=stop
 )
+
+withCallingHandlers(
+  devtools::install_version("shinydashboardPlus", version="0.7.5"),
+  warning=stop
+)
+

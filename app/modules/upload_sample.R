@@ -172,15 +172,15 @@ upload_sample_server<-function(input, output, session, user, parameters){
         } else {
           closeAlert(session, "sample_submission_alert_control")
           createAlert(session, "sample_submission_alert", "sample_submission_alert_control", title = "",
-                      content = "There was an error while registering your files. Please try again later, if the problem
-                      persists please contact admin", style = "danger")
+                      content = paste("There was an error while registering your files. Please try again later, if the problem
+                      persists please contact",  parameters$email$address), style = "danger")
           ready(F)
         }
       }, error=function(e){
         closeAlert(session, "sample_submission_alert_control")
         createAlert(session, "sample_submission_alert", "sample_submission_alert_control", title = "",
-                    content = "We are having issues with submitting your sample for analysis please try again later
-                        if the problem persists please contact admin", style = "danger")
+                    content = paste("We are having issues with submitting your sample for analysis please try again later
+                        if the problem persists please contact", parameters$email$address) , style = "danger")
         analysis<-data.frame(time=Sys.time(), message="sample upload fail", status="fail",
                              sampleid=NULL)
         dbWriteTable(conn, "analysis", analysis, append=T, row.names=F)
@@ -189,8 +189,8 @@ upload_sample_server<-function(input, output, session, user, parameters){
     } else {
       closeAlert(session, "sample_submission_alert_control")
       createAlert(session, "sample_submission_alert", "sample_submission_alert_control", title="",
-                  content="Seems like there already is a folder with your samplename but the records are not in our database
-                  please contact admin to fix this error",
+                  content=paste("Seems like there already is a folder with your samplename but the records are not in our database
+                  please contact", parameters$email$address, "to fix this error"),
                   style = "danger")
       ready(F)
     }

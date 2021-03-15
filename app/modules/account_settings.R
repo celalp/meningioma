@@ -122,7 +122,7 @@ account_settings_server<-function(input, output, session, user, parameters){
       }, error=function(e){
         closeAlert(session, "settings_change_alert_control")
         createAlert(session, "settings_change_alert", "settings_change_alert_control", title="", 
-                    content="We could not update your email please try again later, if the problem persits please email admin", 
+                    content=paste("We could not update your email please try again later, if the problem persits please email", parameters$email$address), 
                     style = "danger")
         access<-data.frame(time=Sys.time(), username=user$username, action="email_update", status="fail")
         dbWriteTable(conn, "access", access, append=T, row.names=F)
@@ -161,7 +161,7 @@ account_settings_server<-function(input, output, session, user, parameters){
       }, error=function(e){
         closeAlert(session, "settings_change_alert_control")
         createAlert(session, "settings_change_alert", "settings_change_alert_control", title="", 
-                    content="We could not update your password please try again later, if the problem persits please email admin", 
+                    content=paste("We could not update your password please try again later, if the problem persits please email", parameters$email$address), 
                     style = "danger")
         access<-data.frame(time=Sys.time(), username=user$username, action="password_update", status="fail")
         dbWriteTable(conn, "access", access, append=T, row.names=F)
@@ -196,7 +196,7 @@ account_settings_server<-function(input, output, session, user, parameters){
       }, error=function(e){
         closeAlert(session, "settings_change_alert_control")
         createAlert(session, "settings_change_alert", "settings_change_alert_control", title="", 
-                    content="We could not update your secret please try again later, if the problem persits please email admin", 
+                    content=paste("We could not update your secret please try again later, if the problem persits please email", parameters$email$address), 
                     style = "danger")
         access<-data.frame(time=Sys.time(), username=user$username, action="secret_update", status="fail")
         dbWriteTable(conn, "access", access, append=T, row.names=F)

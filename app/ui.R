@@ -37,7 +37,7 @@ ui<-navbarPage("Methylation App", theme = shinytheme("cosmo"), inverse = F, sele
 
                         # browser leave page warning
                         ########### ENABLE WHEN DONE ###########
-                        #tags$head(tags$script("window.onbeforeunload = function() { return true; }")),
+                        tags$head(tags$script("window.onbeforeunload = function() { return true; }")),
 
                         fluidRow(tags$img(src="img/banner.jpg", style="width: 100%;")),
 
