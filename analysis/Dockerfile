@@ -5,15 +5,14 @@ RUN apt update -y && \
     apt install -y \
       libpq-dev \
       pandoc \
-      texlive-base \
-      texlive-binaries \
-      texlive-full \
+#      texlive-base \
+#      texlive-binaries \
+#      texlive-full \
       && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/app
 COPY install.R .
 RUN Rscript install.R
-
 
 COPY  analysis_pipeline.R config.yaml header.png header.tex sample_report.Rmd ./
 

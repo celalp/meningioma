@@ -31,11 +31,17 @@ withCallingHandlers(
   )),
   warning=stop
 )
+
 withCallingHandlers(
   devtools::install_github("markgene/maxprobes"),
   warning=stop
 )
+
 withCallingHandlers(
   devtools::install_version("hdnom", version="5.0"),
   warning=stop
 )
+
+tinytex::install_tinytex()
+tinytex::tlmgr_install('scheme-full')
+
