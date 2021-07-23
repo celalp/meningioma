@@ -2,7 +2,7 @@
 
 ## Setup
 
-1. Copy `sample.env` to `.env` and change the database credentials and admin contact email. If using external proxy, remove `127.0.0.1:` from `SHINYPROXY_HOST_PORT`.
+1. Copy `sample.env` to `.env` and change the database credentials. Add admin contact email in `app/config.yaml` . If using external proxy, remove `127.0.0.1:` from `SHINYPROXY_HOST_PORT`.
 1. If using internal nginx, create `nginx/certs` and add your `public.crt` and `private.key`.
 1. Add proprietary models in `analysis/externaldata` and `analysis/extrasample` directories.
 
